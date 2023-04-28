@@ -15,97 +15,7 @@ vertice_y=0
 intervalo_crecimiento = ""
 intervalo_decrecimiento = ""
 b=0
-
 raices = []
-
-
-
-#Ejercicio 3
-
-
-valor_pendiente = Fraction(input("Ingrese el coheficiente principal. Siendo ax2 + bx + c ingrese el valor de a \n :"))
-valor_lineal = Fraction(input("Ingrese el termino lineal. Siendo ax2 + bx + c ingrese el valor de b \n :"))
-valor_ordenada = Fraction(input("Ingrese el termino independiente. Siendo ax2 + bx + c ingrese el valor de c \n :"))
-
-if(valor_pendiente>0):
-    pendiente = 1
-else:
-    pendiente = -1
-
-try:
-    delta = sqrt(valor_lineal**2 - 4 * valor_pendiente * valor_ordenada)
-except ValueError:
-    b = 1
-
-
-if(b==0):
-
-    raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
-
-    raices.append(raiz)
-
-    raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
-
-    raices.append(raiz)
-
-if(delta<0):
-    tipo_raiz = 1
-elif(delta==0):
-    tipo_raiz = 2
-elif(delta>0):
-    tipo_raiz = 3
-
-vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
-
-vertice_y = valor_pendiente * vertice_x ** 2 + valor_lineal * vertice_x + valor_ordenada
-
-
-if(pendiente==1):
-    intervalo_decrecimiento = "(-∞, " + str(vertice_x) + ")"  
-    intervalo_crecimiento = "(" + str(vertice_x) + ", +∞)"
-    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
-    print("El intervalo de crecimiento es " + intervalo_crecimiento)
-elif(pendiente==-1):
-    intervalo_crecimiento = "(-∞, " + str(vertice_x) + ")"  
-    intervalo_decrecimiento = "(" + str(vertice_x) + ", +∞)"
-    print("El intervalo de crecimiento es " + intervalo_crecimiento)
-    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
-
-
-
-
-
-
-
-
-
-
-#Ejercicio 2
-
-
-valor_pendiente = Fraction(input("Ingrese el coheficiente principal. Siendo ax + b, ingrese el valor de a \n :"))
-
-valor_ordenada = Fraction(input("Ingrese el termino independiente. Siendo ax + b, ingrese el valor de b \n :"))
-
-
-if(valor_pendiente>0):
-    pendiente = "Creciente"
-else:
-    pendiente = "Decreciente"
-    
-raiz = (valor_ordenada * -1) / valor_pendiente
-
-print("Corte en x = " + str(raiz))
-print("Corte en y = " + str(valor_ordenada))
-print("Pendiente = " + str(pendiente))
-
-
-
-
-
-
-
-
 
 #Ejercicio 1
 
@@ -181,10 +91,71 @@ while(start==True):
             else:
                 start=False
     
+        if opcion==2:
+            
+            if(valor_pendiente>0):
+                pendiente = "Creciente"
+            else:
+                pendiente = "Decreciente"
+                
+            raiz = (valor_ordenada * -1) / valor_pendiente
 
+            print("Corte en x = " + str(raiz))
+            print("Corte en y = " + str(valor_ordenada))
+            print("Pendiente = " + str(pendiente))
 
     
         
+#Ejercicio 3
+
+
+valor_pendiente = Fraction(input("Ingrese el coheficiente principal. Siendo ax2 + bx + c ingrese el valor de a \n :"))
+valor_lineal = Fraction(input("Ingrese el termino lineal. Siendo ax2 + bx + c ingrese el valor de b \n :"))
+valor_ordenada = Fraction(input("Ingrese el termino independiente. Siendo ax2 + bx + c ingrese el valor de c \n :"))
+
+if(valor_pendiente>0):
+    pendiente = 1
+else:
+    pendiente = -1
+
+try:
+    delta = sqrt(valor_lineal**2 - 4 * valor_pendiente * valor_ordenada)
+except ValueError:
+    b = 1
+
+
+if(b==0):
+
+    raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
+
+    raices.append(raiz)
+
+    raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
+
+    raices.append(raiz)
+
+if(delta<0):
+    tipo_raiz = 1
+elif(delta==0):
+    tipo_raiz = 2
+elif(delta>0):
+    tipo_raiz = 3
+
+vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
+
+vertice_y = valor_pendiente * vertice_x ** 2 + valor_lineal * vertice_x + valor_ordenada
+
+
+if(pendiente==1):
+    intervalo_decrecimiento = "(-∞, " + str(vertice_x) + ")"  
+    intervalo_crecimiento = "(" + str(vertice_x) + ", +∞)"
+    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
+    print("El intervalo de crecimiento es " + intervalo_crecimiento)
+elif(pendiente==-1):
+    intervalo_crecimiento = "(-∞, " + str(vertice_x) + ")"  
+    intervalo_decrecimiento = "(" + str(vertice_x) + ", +∞)"
+    print("El intervalo de crecimiento es " + intervalo_crecimiento)
+    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
         
         
         
