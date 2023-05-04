@@ -37,7 +37,7 @@ while(start==True):
 
     opcion = int(input("Bienvenidos al programa de operacion de ecuaciones matematicas! \n Elija la opcion que desee: \n 1) Rectas paralela y perpendicular a una dada. \n 2) Análisis de una función lineal.\n 3) Análisis de una función cuadrática. \n:"))
 
-    os.system("cls")
+    #os.system("cls") 
 
     if opcion == 1 or opcion==2:
 
@@ -108,54 +108,63 @@ while(start==True):
         
 #Ejercicio 3
 
+    if(opcion==3):
 
-valor_pendiente = Fraction(input("Ingrese el coheficiente principal. Siendo ax2 + bx + c ingrese el valor de a \n :"))
-valor_lineal = Fraction(input("Ingrese el termino lineal. Siendo ax2 + bx + c ingrese el valor de b \n :"))
-valor_ordenada = Fraction(input("Ingrese el termino independiente. Siendo ax2 + bx + c ingrese el valor de c \n :"))
+        valor_pendiente = Fraction(input("Ingrese el coheficiente principal. Siendo ax2 + bx + c ingrese el valor de a \n :"))
+        valor_lineal = Fraction(input("Ingrese el termino lineal. Siendo ax2 + bx + c ingrese el valor de b \n :"))
+        valor_ordenada = Fraction(input("Ingrese el termino independiente. Siendo ax2 + bx + c ingrese el valor de c \n :"))
 
-if(valor_pendiente>0):
-    pendiente = 1
-else:
-    pendiente = -1
+        if(valor_pendiente>0):
+            pendiente = 1
+        else:
+            pendiente = -1
 
-try:
-    delta = sqrt(valor_lineal**2 - 4 * valor_pendiente * valor_ordenada)
-except ValueError:
-    b = 1
+        try:
+            delta = sqrt(valor_lineal**2 - 4 * valor_pendiente * valor_ordenada)
+        except ValueError:
+            b = 1
 
+        if(b==0):
 
-if(b==0):
+            raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
 
-    raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
+            raices.append(raiz)
 
-    raices.append(raiz)
+            raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
 
-    raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
-
-    raices.append(raiz)
-
-if(delta<0):
-    tipo_raiz = 1
-elif(delta==0):
-    tipo_raiz = 2
-elif(delta>0):
-    tipo_raiz = 3
-
-vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
-
-vertice_y = valor_pendiente * vertice_x ** 2 + valor_lineal * vertice_x + valor_ordenada
+            raices.append(raiz)
 
 
-if(pendiente==1):
-    intervalo_decrecimiento = "(-∞, " + str(vertice_x) + ")"  
-    intervalo_crecimiento = "(" + str(vertice_x) + ", +∞)"
-    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
-    print("El intervalo de crecimiento es " + intervalo_crecimiento)
-elif(pendiente==-1):
-    intervalo_crecimiento = "(-∞, " + str(vertice_x) + ")"  
-    intervalo_decrecimiento = "(" + str(vertice_x) + ", +∞)"
-    print("El intervalo de crecimiento es " + intervalo_crecimiento)
-    print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
+        vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
+
+        vertice_y = valor_pendiente * vertice_x ** 2 + valor_lineal * vertice_x + valor_ordenada
+
+        if(pendiente==1):
+            
+            intervalo_decrecimiento = "(-∞, " + str(vertice_x) + ")"  
+            intervalo_crecimiento = "(" + str(vertice_x) + ", +∞)"
+            print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
+            print("El intervalo de crecimiento es " + intervalo_crecimiento)
+        
+        elif(pendiente==-1):
+            
+            intervalo_crecimiento = "(-∞, " + str(vertice_x) + ")"  
+            intervalo_decrecimiento = "(" + str(vertice_x) + ", +∞)"
+            print("El intervalo de crecimiento es " + intervalo_crecimiento)
+            print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
+        
+        if(b==0):
+            print("Las raices son: x1 = " + str(Fraction(raices[0])) + " x2 = " + str(Fraction(raices[1])))
+        
+        print("Los vertices son: Vx = " + str(vertice_x) + " Vy = " + str(vertice_y))
+        
+        if(delta<0):
+            print("Las raices son complejas")
+        elif(delta==0):
+            tipo_raiz = 2
+        elif(delta>0):
+            tipo_raiz = 3
+        
         
         
         
