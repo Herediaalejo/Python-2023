@@ -29,7 +29,7 @@ def chisteMalo():
 
 def sorteo():
     listaParticipante = []
-    cantParticipantes = input("Introduzca cantidad de participantes: ")
+    cantParticipantes = int(input("Introduzca cantidad de participantes: "))
     con = 0
     while con < cantParticipantes:
         participante = input("Introduzca nombre del participante: ")
@@ -61,5 +61,16 @@ def eleccion():
         print("La opcion escogida fue: " + op1)
     if(escogida==2):
         print("La opcion escogida fue: " + op2)
+
+
+fibonacci()
+
+chisteMalo()
+
+sorteo()
+
+datosRandom()
+
+eleccion()
 
 
