@@ -97,8 +97,13 @@ while(start==True):
                 pendiente = "Creciente"
             else:
                 pendiente = "Decreciente"
+
+            if(valor_ordenada==0):
+                raiz=0
+            else:
+                raiz = (valor_ordenada * -1) / valor_pendiente
                 
-            raiz = (valor_ordenada * -1) / valor_pendiente
+            
 
             print("Corte en x = " + str(raiz))
             print("Corte en y = " + str(valor_ordenada))
