@@ -1,3 +1,5 @@
+import os
+
 def validacionEdad(edad):
     if(edad>=18):
         print("Eres mayor")
@@ -14,7 +16,7 @@ def sumaLista(lista):
     suma=0
     for i in range (0,len(lista)):
         suma+=lista[i]
-    print(suma) 
+    print("El resultado es:" + str(suma)) 
 
 def palindromo(palabra):
     palabra = palabra.lower()
@@ -79,7 +81,7 @@ def tiempoDeViaje(distancia):
     elif(vehiculo==5):
         horas = distancia / 5
     elif(vehiculo==6):
-        horas = distancia / 0.0000001
+        horas = distancia * 0.000000000000001
     horas = round(horas, 2)
     minutos = round(horas * 60,2)
     segundos = round(minutos * 60,2)
@@ -94,13 +96,29 @@ def tiempoDeViaje(distancia):
 
 validacionEdad(int(input("Ingrese su edad: ")))
 
+op=input("Enter para continuar")
+os.system("cls")
+
+print("Sumaremos los valores de una lista conformada por los numeros 1,5,8,6,10,2")
 sumaLista([1,5,8,6,10,2])
+
+op=input("Enter para continuar")
+os.system("cls")
 
 print(palindromo(input("Un palindromo es una palabra que se lee y se escribe igual al derecho y al reves. \n Ingrese palabra a comprobar: ")))
 
-conversionADolar(int(input("Ingrese cantidad de dinero a convertir: ")))
+op=input("Enter para continuar")
+os.system("cls")
+
+conversionADolar(int(input("Haremos la conversion de tu dinero a dolares. Ingrese cantidad de dinero a convertir: ")))
+
+op=input("Enter para continuar")
+os.system("cls")
 
 tiempoDeViaje(int(input("Ingrese distancia a destino en km: ")))
+
+op=input("Enter para continuar")
+os.system("cls")
 
     
 

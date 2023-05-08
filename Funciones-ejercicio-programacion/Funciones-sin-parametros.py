@@ -1,4 +1,5 @@
 import random
+import os
 
 def fibonacci():
     lista = [0]
@@ -63,14 +64,33 @@ def eleccion():
         print("La opcion escogida fue: " + op2)
 
 
+print("Esta es la escala fibonacci: " )
 fibonacci()
 
+op=input("Enter para continuar")
+os.system("cls")
+
+print("Te contare un chiste malo: ")
 chisteMalo()
 
+op=input("Enter para continuar")
+os.system("cls")
+
+print("Hagamos un sorteo: ")
 sorteo()
 
+op=input("Enter para continuar")
+os.system("cls")
+
+print("Te tiro este dato: ")
 datosRandom()
 
+op=input("Enter para continuar")
+os.system("cls")
+
 eleccion()
+
+op=input("Enter para continuar")
+os.system("cls")
 
 
