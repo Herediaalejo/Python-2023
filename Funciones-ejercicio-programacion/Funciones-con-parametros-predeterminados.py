@@ -113,5 +113,4 @@ os.system("cls")
 prediccionMundial(input("Bienvenido a la prediccion del mundial. Ingrese su pais: "))
 
 op=input("Enter para continuar")
-
 os.system("cls")
