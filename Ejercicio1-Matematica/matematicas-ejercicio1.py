@@ -39,17 +39,21 @@ while(True):
 
     if(opcion.isnumeric()):
         opcion=int(opcion)
-        flag=0
+        if(opcion>3 or opcion<0):
+            flag=1
     else:
         flag=1
 
     os.system("cls") 
 
     if opcion == 1 or opcion==2:
+
+        flag = 0
         
         while(True):
 
             valor_pendiente= input("Ingrese el valor del coheficiente principal (siendo ax + b, ingrese el valor de a): ")
+
             if valor_pendiente == "0":
                 print("Valor Invalido")
                 continue
@@ -73,11 +77,9 @@ while(True):
         if(flag==0):
 
             if opcion==1:
+
+                valores_independientes_distintos=[]
                
-
-                valor_pendiente_perpendicular = valor_pendiente * (1 / (valor_pendiente * valor_pendiente))
-                valor_pendiente_perpendicular = valor_pendiente_perpendicular * (-1)
-
                 while(con<3):
 
                     valor_ordenada_distinto = 0
@@ -101,11 +103,13 @@ while(True):
 
                 print("\nLa condicion de perpendicularidad es que la pendiente debe ser inversa y opuesta, el termino independiente puede cambiar o no hacerlo. \nEcuaciones con rectas perpendiculares a la dada:")
                 
+                valor_pendiente_perpendicular = (1 / valor_pendiente) * (-1)
+                
                 con = 0
-                if(valor_pendiente_perpendicular>=0):     
+                if(valor_ordenada>=0):     
                     ecuacion = f"y = {Fraction(valor_pendiente_perpendicular)} x + {Fraction(valor_ordenada)}"
                 else:
-                    ecuacion = f"y = {Fraction(valor_pendiente_perpendicular)} x - {Fraction(valor_ordenada)}"
+                    ecuacion = f"y = {Fraction(valor_pendiente_perpendicular)} x - {Fraction(valor_ordenada) * (-1)}"
                 print (ecuacion)
 
                 while(con<2):
@@ -115,10 +119,13 @@ while(True):
                         ecuacion = f"y = {Fraction(valor_pendiente_perpendicular)} x - {Fraction(valores_independientes_distintos[con]) *(-1)}"
                     print(ecuacion)
                     con+=1
+                    
 
                 op=input("\n¿Desea seguir realizando operaciones con el programa? \nS/n \n:")
                 if (op=="n" or op=="N"):
                     break
+                
+
         
             if opcion==2:
                 
@@ -127,9 +134,11 @@ while(True):
                 else:
                     pendiente = "Decreciente"
 
-                if(valor_ordenada==0):
+                if(valor_ordenada==0): 
                     raiz=0
                 else:
+                    # 0 = ax + b
+                    # x = -b/a
                     raiz = (valor_ordenada * -1) / valor_pendiente
                     
                 print("Corte en x = " + str(raiz))
@@ -143,6 +152,8 @@ while(True):
 #Ejercicio 3
 
     if opcion==3:
+
+        raices = []
 
         while(True):
  
@@ -184,28 +195,30 @@ while(True):
             else:
                 pendiente = -1
 
-            try:
-                delta = sqrt(valor_lineal**2 - 4 * valor_pendiente * valor_ordenada)
-            except ValueError:
-                b = 1
+            delta = valor_lineal**2 - 4 * valor_pendiente * valor_ordenada
+                
 
-            if(b==0):
+            if(delta>=0):
 
-                if(valor_ordenada==0):
-                    raiz=0
-                else:
-                    raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
+                raiz = ((valor_lineal * (-1)) + sqrt(delta)) / (2 * valor_pendiente)
 
-                    raices.append(raiz)
+                raices.append(raiz)
 
-                    raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
+                raiz = ((valor_lineal * (-1)) - sqrt(delta)) / (2 * valor_pendiente)
 
-                    raices.append(raiz)
+                raices.append(raiz)
 
 
             vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
 
             vertice_y = valor_pendiente * vertice_x ** 2 + valor_lineal * vertice_x + valor_ordenada
+
+            if(delta >= 0):
+
+                print("Corte con el eje x: x1 = " + str(Fraction(raices[0])) + " x2 = " + str(Fraction(raices[1])))
+                    
+            print(f"Corte con el eje y: {valor_ordenada}")
+
 
             if(pendiente==1):
                 
@@ -223,32 +236,30 @@ while(True):
                 print("El intervalo de crecimiento es " + intervalo_crecimiento)
                 print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
             
-            if(b==0):
-                print("Corte con el eje x: x1 = " + str(Fraction(raices[0])) + " x2 = " + str(Fraction(raices[1])))
-            
-            print(f"Corte con el eje y: {valor_ordenada}")
-
+    
             print("Los vertices son: Vx = " + str(vertice_x) + " Vy = " + str(vertice_y))
 
-            if(valor_coheficiente_principal>0):
-                print("La concavidad es hacia arriba")
-            elif(valor_coheficiente_principal<0):
-                print("La concavidad es hacia abajo")
-        
+            print(f"La coordenada del vertice es ({vertice_x},{vertice_y})")
 
+            if(valor_pendiente>0):
+                print("La concavidad es hacia arriba ")
+
+            elif(valor_pendiente<0):
+                print("La concavidad es hacia abajo ")
+        
             
             if(delta<0):
-                print("Las raices son complejas")
+                print("Las raices son complejas ")
 
             elif(delta==0):
-                print("Las raices son dobles")
+                print("Las raices son dobles ")
 
             elif(delta>0):
-                print("Las raices son reales")
+                print("Las raices son reales ")
 
-            op=input("\n ¿Desea seguir realizando operaciones con el programa? \n S/n \n:")
+            op=input("\n¿Desea seguir realizando operaciones con el programa? \nS/n \n:")
 
-            if (op=="n" or op=="N"):
+            if (op == "n" or op =="N"):
                 break
         
         
