@@ -17,25 +17,20 @@ intervalo_decrecimiento = ""
 b=0
 raices = []
 continuar = ""
-
-#Ejercicio 1
-
 valor_coheficiente_principal = 0
 valor_ordenada_distinto = 0
 valor_pendiente_perpendicular = 0
-
 valores_independientes_distintos = []
-
 comportamiento_recta=""
 ecuacion = ""
 con = 0
 flag=0
-
 op = ""
 signo = ""
 
-
 while(True):
+
+    os.system("cls")
 
     if(flag==0):
         opcion = input("Bienvenidos al programa de operacion de ecuaciones matematicas! \n Elija la opcion que desee: \n 1) Rectas paralela y perpendicular a una dada. \n 2) Análisis de una función lineal.\n 3) Análisis de una función cuadrática. \n:")
@@ -51,23 +46,34 @@ while(True):
     os.system("cls") 
 
     if opcion == 1 or opcion==2:
+        
+        while(True):
 
-        valor_pendiente= input("Ingrese el valor del coheficiente principal (siendo ax + b, ingrese el valor de a): ")
-
-        valor_ordenada= input("Ingrese el valor del termino independiente (siendo ax + b, ingrese el valor de b): ")
-
-        try:
-            valor_pendiente = Fraction(valor_pendiente)
-            valor_ordenada = Fraction(valor_ordenada)
-            flag = 0
-            
-        except ValueError:
-            print("Valor invalido")
-            flag = 1
+            valor_pendiente= input("Ingrese el valor del coheficiente principal (siendo ax + b, ingrese el valor de a): ")
+            if valor_pendiente == "0":
+                print("Valor Invalido")
+                continue
+                
+            try:
+                valor_pendiente = Fraction(valor_pendiente)
+                break                   
+            except ValueError:
+                print("Valor invalido")
+                
+        
+        while(True):
+    
+            valor_ordenada= input("Ingrese el valor del termino independiente (siendo ax + b, ingrese el valor de b): ")    
+            try:
+                valor_ordenada = Fraction(valor_ordenada)
+                break     
+            except ValueError:
+                print("Valor invalido")
         
         if(flag==0):
 
             if opcion==1:
+               
 
                 valor_pendiente_perpendicular = valor_pendiente * (1 / (valor_pendiente * valor_pendiente))
                 valor_pendiente_perpendicular = valor_pendiente_perpendicular * (-1)
@@ -81,7 +87,7 @@ while(True):
                         valores_independientes_distintos.append(valor_ordenada_distinto)
                         con+=1
 
-                print("La condicion de paralelismo es que el coheficiente principal se mantenga y el termino independiente sea el que cambie. \n Ecuaciones con rectas paralelas a la dada:")
+                print("\nLa condicion de paralelismo es que el coheficiente principal se mantenga y el termino independiente sea el que cambie. \nEcuaciones con rectas paralelas a la dada:")
                 con = 0
                 
                 while(con<3):
@@ -93,7 +99,7 @@ while(True):
                     print(ecuacion)
                     con+=1
 
-                print("La condicion de perpendicularidad es que la pendiente debe ser inversa y opuesta, el termino independiente puede cambiar o no hacerlo. \n Ecuaciones con rectas perpendiculares a la dada:")
+                print("\nLa condicion de perpendicularidad es que la pendiente debe ser inversa y opuesta, el termino independiente puede cambiar o no hacerlo. \nEcuaciones con rectas perpendiculares a la dada:")
                 
                 con = 0
                 if(valor_pendiente_perpendicular>=0):     
@@ -110,7 +116,7 @@ while(True):
                     print(ecuacion)
                     con+=1
 
-                op=input("\n ¿Desea seguir realizando operaciones con el programa? \n S/n \n:")
+                op=input("\n¿Desea seguir realizando operaciones con el programa? \nS/n \n:")
                 if (op=="n" or op=="N"):
                     break
         
@@ -130,7 +136,7 @@ while(True):
                 print("Corte en y = " + str(valor_ordenada))
                 print("Pendiente = " + str(pendiente))
 
-                op=input("\n ¿Desea seguir realizando operaciones con el programa? \n S/n \n:")
+                op=input("\n¿Desea seguir realizando operaciones con el programa? \nS/n \n:")
                 if (op=="n" or op=="N"):
                     break   
         
@@ -139,44 +145,38 @@ while(True):
     if opcion==3:
 
         while(True):
-
+ 
             valor_pendiente = input("Ingrese el coheficiente principal. Siendo ax2 + bx + c ingrese el valor de a \n :")
+            
+            if valor_pendiente == "0":
+                print("Valor Invalido")
+                continue
 
-            if(valor_pendiente.isnumeric() or valor_pendiente.isdecimal() or valor_pendiente.isdigit()):
+            try:
                 valor_pendiente = Fraction(valor_pendiente)
-                break
-            else:
+                break      
+            except ValueError:
                 print("Valor invalido")
             
         while(True):
             valor_lineal = input("Ingrese el termino lineal. Siendo ax2 + bx + c ingrese el valor de b \n :")
 
-            if(valor_lineal.isnumeric() or valor_lineal.isdecimal()):
+            try:
                 valor_lineal = Fraction(valor_lineal)
-                break
-            else:
+                break      
+            except ValueError:
                 print("Valor invalido")
             
         while(True):
 
             valor_ordenada = input("Ingrese el termino independiente. Siendo ax2 + bx + c ingrese el valor de c \n :")
         
-            if(valor_ordenada.isnumeric() or valor_ordenada.isdecimal()):
+            try:
                 valor_ordenada = Fraction(valor_ordenada)
-                break
-            else:
+                break      
+            except ValueError:
                 print("Valor invalido")
-        
-        
-        try:
-            valor_pendiente = Fraction(valor_pendiente)
-            valor_lineal = Fraction(valor_lineal)
-            valor_ordenada = Fraction(valor_ordenada)
-            flag = 0  
-        except ValueError:
-            print("Valor invalido")
-            flag = 1
-        
+                                
         if(flag==0):
 
             if(valor_pendiente>0):
@@ -191,13 +191,16 @@ while(True):
 
             if(b==0):
 
-                raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
+                if(valor_ordenada==0):
+                    raiz=0
+                else:
+                    raiz = ((valor_lineal * (-1)) + delta) / (2 * valor_pendiente)
 
-                raices.append(raiz)
+                    raices.append(raiz)
 
-                raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
+                    raiz = ((valor_lineal * (-1)) - delta) / (2 * valor_pendiente)
 
-                raices.append(raiz)
+                    raices.append(raiz)
 
 
             vertice_x = (valor_lineal * -1) / (2 * valor_pendiente)
@@ -208,6 +211,7 @@ while(True):
                 
                 intervalo_decrecimiento = "(-∞, " + str(vertice_x) + ")"  
                 intervalo_crecimiento = "(" + str(vertice_x) + ", +∞)"
+                
                 print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
                 print("El intervalo de crecimiento es " + intervalo_crecimiento)
             
@@ -215,22 +219,35 @@ while(True):
                 
                 intervalo_crecimiento = "(-∞, " + str(vertice_x) + ")"  
                 intervalo_decrecimiento = "(" + str(vertice_x) + ", +∞)"
+                
                 print("El intervalo de crecimiento es " + intervalo_crecimiento)
                 print("El intervalo de decrecimiento es " + intervalo_decrecimiento)
             
             if(b==0):
-                print("Las raices son: x1 = " + str(Fraction(raices[0])) + " x2 = " + str(Fraction(raices[1])))
+                print("Corte con el eje x: x1 = " + str(Fraction(raices[0])) + " x2 = " + str(Fraction(raices[1])))
             
+            print(f"Corte con el eje y: {valor_ordenada}")
+
             print("Los vertices son: Vx = " + str(vertice_x) + " Vy = " + str(vertice_y))
+
+            if(valor_coheficiente_principal>0):
+                print("La concavidad es hacia arriba")
+            elif(valor_coheficiente_principal<0):
+                print("La concavidad es hacia abajo")
+        
+
             
             if(delta<0):
                 print("Las raices son complejas")
+
             elif(delta==0):
-                tipo_raiz = 2
+                print("Las raices son dobles")
+
             elif(delta>0):
-                tipo_raiz = 3
+                print("Las raices son reales")
 
             op=input("\n ¿Desea seguir realizando operaciones con el programa? \n S/n \n:")
+
             if (op=="n" or op=="N"):
                 break
         
