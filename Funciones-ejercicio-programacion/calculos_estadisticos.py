@@ -47,16 +47,16 @@ for num in numeros:
 numDesv = numDesv / cantidad
 numDesv = numDesv**0.5
 
-print(
-f"""
-La lista de numeros es la siguiente:
-{numeros}
-Calculos estadisticos realizados con la lista:
-Suma: {suma}
-Promedio: {promedio}
-Numero minimo: {numMinimo}
-Numero maximo: {numMaximo}
-Desviacion estandar: {numDesv}
-""")
+dictCalculos = {
+    "Numeros": numeros,
+    "Suma": suma,
+    "Promedio": promedio,
+    "Numero minimo": numMinimo,
+    "Numero maximo": numMaximo,
+    "Desviacion estandar": numDesv
+}
+
+for clave,valor in dictCalculos.items():
+    print(f"{clave} : {valor}")
 
 
