@@ -21,11 +21,6 @@ def checkNum(num):
 
 numeros = []
 numero = ""
-cantidad = 0
-suma = 0
-promedio = 0
-numMinimo = 0
-numMaximo = 0
 numDesv = 0
 
 numero = (input("Ingrese los numeros separados por un espacio: "))
@@ -34,25 +29,17 @@ for i in range(len(numeros)):
     numeros[i] = checkNum(numeros[i])
 
 for num in numeros:
-    suma += num
-    cantidad += 1
+    numDesv += (num-(sum(numeros)/len(numeros)))**2
 
-promedio = suma / cantidad
-numMinimo = min(numeros)
-numMaximo = max(numeros)
-
-for num in numeros:
-    numDesv += (num-promedio)**2
-
-numDesv = numDesv / cantidad
+numDesv = numDesv / len(numeros)
 numDesv = numDesv**0.5
 
 dictCalculos = {
     "Numeros": numeros,
-    "Suma": suma,
-    "Promedio": promedio,
-    "Numero minimo": numMinimo,
-    "Numero maximo": numMaximo,
+    "Suma": sum(numeros),
+    "Promedio": sum(numeros)/len(numeros),
+    "Numero minimo": min(numeros),
+    "Numero maximo": max(numeros),
     "Desviacion estandar": numDesv
 }
 
