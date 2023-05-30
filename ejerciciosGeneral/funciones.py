@@ -1,3 +1,5 @@
+import os
+
 def checkNum(num):
     while True:
         try:
@@ -11,7 +13,7 @@ def checkNum(num):
                 print (f"El valor '{num}' no es un numero")
                 num = input("Ingrese un número valido: ")
 
-def checkOption(opcion,cantidad):
+def checkOption(opcion,cantidad,menu=""):
     while True:
         try:
             opcion = int(opcion)
@@ -20,9 +22,13 @@ def checkOption(opcion,cantidad):
                     continue
                 if opcion==op:
                     return opcion
+            os.system("cls")
+            print(menu)
             print("Valor fuera de rango")
             opcion = input("Ingrese opcion valida: ")
         except ValueError:
+            os.system("cls")
+            print(menu)
             print("Valor invalido")
             opcion = input("Ingrese opcion valida: ")
 
