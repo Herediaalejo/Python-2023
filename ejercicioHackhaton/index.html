@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Detección de palabras ofensivas y suicidas</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #DCFFFB;
+      }
+      
+      h1 {
+        text-align: center;
+      }
+      
+      label {
+        font-weight: bold;
+      }
+      
+      textarea {
+        width: 100%;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+      
+      button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #45a049;
+      }
+      
+      h2 {
+        margin-top: 20px;
+      }
+      
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      
+      li {
+        margin-bottom: 5px;
+      }
+      
+      .offensive {
+        color: red;
+      }
+      
+      .suicidal {
+        color: blue;
+      }
+      
+      #ayudaButton {
+        display: none;
+        margin-top: 10px;
+      }
+      
+      #botones {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      #limpiarButton {
+        margin-top: 10px;
+      }
+  </style>
+</head>
+<body>
+  <h1>Detección de palabras ofensivas y suicidas</h1>
+  
+  <label for="inputText">Introduzca texto a analizar:</label>
+  <textarea id="inputText" rows="4" cols="50" onkeydown="analizarConEnter(event)"></textarea>
+  
+  <div id="botones">
+    <button onclick="analizarTexto()">Analizar</button>
+    <button id="limpiarButton" onclick="limpiarTexto()">Limpiar texto</button>
+  </div>
+  
+  <h2>Palabras ofensivas encontradas:</h2>
+  <div id="contenidoOfensivo"></div>
+  
+  <h2>Palabras suicidas encontradas:</h2>
+  <div id="contenidoSuicida"></div>
+  
+  <button id="ayudaButton" onclick="redirigirAyuda()">Ayuda aquí</button>
+  
+  <script>
+    function analizarConEnter(event) {
+        if (event.keyCode === 13) { // Código de tecla ENTER
+          event.preventDefault(); // Evita el comportamiento predeterminado de un salto de línea en el campo de texto
+          analizarTexto(); // Llama a la función analizarTexto()
+        }
+      }
+      function analizarTexto() {
+        const contenidoOfensivo = document.getElementById("contenidoOfensivo");
+        const contenidoSuicida = document.getElementById("contenidoSuicida");
+        const ayudaButton = document.getElementById("ayudaButton");
+        contenidoOfensivo.innerHTML = "";
+        contenidoSuicida.innerHTML = "";
+        ayudaButton.style.display = "none";
+        
+        const docOfensivo = ["gordo", "zorra", "perra", "gato", "maricon", "negro", "matate", "imbecil", "idiota", "boludo", "pelotudo", "pobre", "turro", "rata", "cagon", "retrasado", "mogolico", "gil", "gorreado", "pajero", "croto", "atorrante", "subnormal"];
+        const docSuicida = ["cortar", "ahorcar", "morirme", "morir", "suicidio", "venas", "vena", "tiro", "arma", "depresion", "deprimido", "deprimida", "flagelar", "sobredosis", "apuñalar", "apuñalen", "inyectar", "ahogar", "cuello", "pegar", "tirar"];
+        
+        const inputText = document.getElementById("inputText").value;
+        const palabras = inputText.toLowerCase().match(/\b(\w+)\b/g);
+        
+        let ofensivo = false;
+        let contenido_ofensivo = [];
+        let potencial_suicida = false;
+        let lista_suicida = [];
+        
+        for (const palabra of palabras) {
+          if (docOfensivo.includes(palabra)) {
+            ofensivo = true;
+            contenido_ofensivo.push(palabra);
+          }
+          
+          if (docSuicida.includes(palabra)) {
+            if (palabra === "cortar") {
+              if (docSuicida.includes("venas") || docSuicida.includes("vena")) {
+                potencial_suicida = true;
+                lista_suicida.push(palabra);
+              }
+              if (docSuicida.includes("cuello")) {
+                potencial_suicida = true;
+                lista_suicida.push(palabra);
+              }
+            } else if (palabra === "pegar" && (docSuicida.includes("tiro") || docSuicida.includes("tiros"))) {
+              potencial_suicida = true;
+              lista_suicida.push(palabra);
+            } else {
+              potencial_suicida = true;
+              lista_suicida.push(palabra);
+            }
+          }
+        }
+        
+        if (ofensivo) {
+          const ulOfensivo = document.createElement("ul");
+          for (const palabra of contenido_ofensivo) {
+            const li = document.createElement("li");
+            li.innerText = palabra;
+            li.classList.add("offensive");
+            ulOfensivo.appendChild(li);
+          }
+          contenidoOfensivo.appendChild(ulOfensivo);
+        }
+        
+        if (potencial_suicida) {
+          const ulSuicida = document.createElement("ul");
+          for (const palabra of lista_suicida) {
+            const li = document.createElement("li");
+            li.innerText = palabra;
+            li.classList.add("suicidal");
+            ulSuicida.appendChild(li);
+          }
+          contenidoSuicida.appendChild(ulSuicida);
+          ayudaButton.style.display = "block";
+        }
+      }
+      
+      function redirigirAyuda() {
+        window.open("https://www.asistenciaalsuicida.org.ar/", "_blank");
+      }
+      
+      function limpiarTexto() {
+        document.getElementById("inputText").value = "";
+        document.getElementById("contenidoOfensivo").innerHTML = "";
+        document.getElementById("contenidoSuicida").innerHTML = "";
+        document.getElementById("ayudaButton").style.display = "none";
+      }
+  </script>
+</body>
+</html>
