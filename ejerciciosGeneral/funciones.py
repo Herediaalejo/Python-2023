@@ -11,7 +11,7 @@ def checkNum(num):
                 return num
             except ValueError:
                 print (f"El valor '{num}' no es un numero")
-                num = input("Ingrese un número valido: ")
+                num = input("Ingrese un valor valido: ")
 
 def checkOption(opcion,cantidad,menu=""):
     while True:
@@ -32,4 +32,23 @@ def checkOption(opcion,cantidad,menu=""):
             print("Valor invalido")
             opcion = input("Ingrese opcion valida: ")
 
-    
+def buscarProducto(codigo,listaProductos):
+ 
+    for i in range(len(listaProductos)):
+        
+        if codigo == listaProductos[i].getCodigo():
+            productoDetallado = f"""
+PRODUCTO: {listaProductos[i].getNombre()}
+
+PRECIO: ${listaProductos[i].getPrecio()} 
+
+Marca: {listaProductos[i].getMarca()}
+
+Color: {listaProductos[i].getColor()}
+
+Características: {listaProductos[i].getCaracteristicas()}
+
+Stock: {listaProductos[i].getStock()}
+            """
+            
+            return productoDetallado
