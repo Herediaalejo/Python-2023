@@ -44,32 +44,10 @@ producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Camara 200MP, 12gb 
 
 productos = [producto1,producto2,producto3,producto4]
 
-infoProductos = []
 
-for i in range(len(productos)):
-    infoProductos.append([0]*7)
-
-for i in range(len(productos)):
-        infoProductos[i][0] = productos[i].getNombre()
-        infoProductos[i][1] = productos[i].getPrecio()
-        infoProductos[i][2] = productos[i].getMarca()
-        infoProductos[i][3] = productos[i].getColor()
-        infoProductos[i][4] = productos[i].getStock()
-        infoProductos[i][5] = productos[i].getCaracteristicas()
-        infoProductos[i][6] = productos[i].getCodigo()
 
 mensajeProductosBreve = ""
-for i in range(len(infoProductos)):
-    for k in range(4):
-        if k==0:
-            mensajeProductosBreve = mensajeProductosBreve + str(infoProductos[i][k]) + (" " * (14 - len(str(infoProductos[i][k])))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
-        elif k==1:
-            mensajeProductosBreve = mensajeProductosBreve + "$ " + str(infoProductos[i][k]) + (" " * (6 - len(str(infoProductos[i][k]))))
-        elif k==2:
-            mensajeProductosBreve = mensajeProductosBreve + "Stock: " + str(infoProductos[i][4]) + (" " * (4 - len(str(infoProductos[i][4]))))
-        elif k==3:
-                mensajeProductosBreve = mensajeProductosBreve + "Cod: " + str(infoProductos[i][6]) + (" " * (4 - len(str(infoProductos[i][6]))))
-    mensajeProductosBreve = mensajeProductosBreve + "\n"
+
 
 
 menu = f"""
@@ -94,9 +72,13 @@ while True:
     opcion = checkOption(input(menu),4,menu)
 
     if opcion == 1:
-        productoBuscado = buscarProducto(checkNum(input("Ingrese nombre o código de producto a buscar: ")),productos)
+        productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a buscar: ")),productos)
         print(f"""
-              
 Producto encontrado!!!
 {productoBuscado}             
 """)
+        continuar = input("Ingrese ENTER para continuar")
+    if opcion == 2:
+        productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a agregar: ")),productos)
+
+
