@@ -56,10 +56,33 @@ def buscarProducto(codigo,listaProductos):
         if codigo == listaProductos[i].getCodigo():
             productoEncontrado = listaProductos[i]
             return productoEncontrado
-    print("Producto no encontrado")
+    return False
         
-def añadirACarrito(cod,productos):
-    buscarProducto(cod,productos)
+def añadirACarrito(producto, clase, carrito):
+    if isinstance(producto, clase):
+        carrito.append(producto)
+        return carrito
+    print("Producto no encontrado")
+    return carrito
+
+def volverAMenu():
+    op = ""
+    menu="""
+    ¿Desea volver al menu?
+    1)Si
+    2)No
+    """
+    op = checkOption(input(":"),2,menu)
+
+    if op == 1:
+        return False
+    else:
+        return True
+
+
+
+
+
 
 def productosBreve(productos,cod=0,todos=True):
 

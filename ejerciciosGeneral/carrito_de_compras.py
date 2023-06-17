@@ -1,4 +1,4 @@
-from funciones import checkOption, buscarProducto, checkNum
+from funciones import *
 import os
 # Crear un carrito de compras en Python que funcione únicamente en la consola. El programa debe presentar un menú con las siguientes opciones:Mostrar productos en detalle: Muestra el código del producto, nombre, marca, precio, stock, color y características de cada producto en la tienda.Mostrar información breve del producto: Muestra el código del producto, nombre, precio y cantidad disponible de cada producto en la tienda.Buscar producto por código: Permite al usuario ingresar un código de producto y muestra la información detallada de ese producto.Realizar compra: Permite al usuario agregar productos al carrito de compras. Se generará un nuevo diccionario con el nombre del producto, la cantidad comprada, el precio unitario y el costo total por cada item añadido.Finalizar compra: Cierra la compra y muestra un detalle de los productos comprados, incluyendo el nombre, la cantidad, el precio unitario y el costo total.Salir: Permite al usuario salir del programa.
 
@@ -45,10 +45,10 @@ producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Camara 200MP, 12gb 
 productos = [producto1,producto2,producto3,producto4]
 
 
+carrito = []
+
 
 mensajeProductosBreve = ""
-
-
 
 menu = f"""
 Bienvenido a la tienda!!!!
@@ -66,19 +66,36 @@ Todos los precios están expresados en dólares
 3) Acceder a carrito
 4) Salir
 """
-os.system("cls")
+""" os.system("cls") """
 while True:
+    flag = True
 
     opcion = checkOption(input(menu),4,menu)
 
     if opcion == 1:
-        productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a buscar: ")),productos)
-        print(f"""
-Producto encontrado!!!
-{productoBuscado}             
-""")
-        continuar = input("Ingrese ENTER para continuar")
+
+        while True:
+
+            if flag == True:
+
+                productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a buscar: ")),productos)
+                if productoBuscado != False:
+                    print(f"""
+            Producto encontrado!!!
+            {productoBuscado}
+            """)
+                    continuar = input("Ingrese ENTER para continuar")
+                else:
+                    print("Producto no encontrado")
+                    flag = volverAMenu()
+                    if flag == False:
+                        break
     if opcion == 2:
-        productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a agregar: ")),productos)
+        carrito = añadirACarrito(buscarProducto(checkNum(input("Ingrese código de producto a agregar: ")),productos), Producto)
+
+
+
+
+
 
 
