@@ -80,11 +80,9 @@ def volverAMenu():
         return True
 
 
+def productosBreve(productos,producto="",todos=True):
 
-
-
-
-def productosBreve(productos,cod=0,todos=True):
+    productoBreve = ""
 
     if todos:
 
@@ -102,8 +100,6 @@ def productosBreve(productos,cod=0,todos=True):
                         productoBreve = productoBreve + "Cod: " + str(infoProductos[i][6]) + (" " * (4 - len(str(infoProductos[i][6]))))
             productoBreve = productoBreve + "\n"
     else:
-
-        producto = buscarProducto(cod,productos)
         
         productoBreve = productoBreve + str(producto.getNombre()) + (" " * (14 - len(str(producto.getNombre())))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
                 
@@ -115,7 +111,7 @@ def productosBreve(productos,cod=0,todos=True):
         
     return productoBreve
 
-def productosDetallado(productos,cod=0,todos=True):
+def productosDetallado(productos=[],producto="",todos=True):
             
         if todos:
         
@@ -138,8 +134,6 @@ def productosDetallado(productos,cod=0,todos=True):
                         """
         else:
             
-            producto = buscarProducto(cod,productos)
-
             productoDetallado = f"""
             PRODUCTO: {producto.getNombre()}
 

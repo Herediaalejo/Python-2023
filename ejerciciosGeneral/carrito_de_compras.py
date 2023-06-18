@@ -48,7 +48,7 @@ productos = [producto1,producto2,producto3,producto4]
 carrito = []
 
 
-mensajeProductosBreve = ""
+mensajeProductosBreve = productosBreve(productos, 0, True)
 
 menu = f"""
 Bienvenido a la tienda!!!!
@@ -82,8 +82,9 @@ while True:
                 if productoBuscado != False:
                     print(f"""
             Producto encontrado!!!
-            {productoBuscado}
+            {productosDetallado("",productoBuscado, False)}
             """)
+                    #Preguntar si desea añadir al carrito
                     continuar = input("Ingrese ENTER para continuar")
                 else:
                     print("Producto no encontrado")
