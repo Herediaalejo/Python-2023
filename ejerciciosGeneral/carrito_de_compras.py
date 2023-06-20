@@ -42,15 +42,23 @@ producto2 = Producto(2,"MACBOOK AIR","APPLE",3000,10,"Gris claro","Apple M1 8GB 
 producto3 = Producto(3,"VISION PRO","APPLE",4000,15,"Gris","Full vision 360°")
 producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Camara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
 
-productos = [producto1,producto2,producto3,producto4]
+
 
 
 carrito = []
+op = 0
 
 
-mensajeProductosBreve = productosBreve(productos, 0, True)
 
-menu = f"""
+""" os.system("cls") """
+while True:
+    productos = [producto1,producto2,producto3,producto4]
+
+    mensajeProductosBreve = productosBreve(productos, 0, True)
+
+    mensajeCarritoBreve = productosBreve(carrito,0,True)
+
+    menu = f"""
 Bienvenido a la tienda!!!!
 
 Estos son nuestros productos disponibles actualmente:
@@ -66,11 +74,30 @@ Todos los precios están expresados en dólares
 3) Acceder a carrito
 4) Salir
 """
-""" os.system("cls") """
-while True:
+    if len(carrito)>0:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{mensajeProductosBreve}
+
+Todos los precios están expresados en dólares
+
+Su carrito:
+
+{mensajeCarritoBreve}
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Acceder a carrito
+4) Salir
+"""
     flag = True
 
-    opcion = checkOption(input(menu),4,menu)
+    opcion = checkOption(input(menu+":"),4,menu)
 
     if opcion == 1:
 
@@ -78,21 +105,29 @@ while True:
 
             if flag == True:
 
-                productoBuscado = buscarProducto(checkNum(input("Ingrese código de producto a buscar: ")),productos)
+                productoBuscado = buscarProducto(input("Ingrese código o nombre de producto a buscar: "),productos)
+
                 if productoBuscado != False:
-                    print(f"""
-            Producto encontrado!!!
-            {productosDetallado("",productoBuscado, False)}
-            """)
-                    #Preguntar si desea añadir al carrito
+
+                    mensajeCarrito ="¿Desea añadirlo al carrito? \n1) Si \n2) No"
+
+                    print(f"\nProducto encontrado!!!\n{productosDetallado(productos,productoBuscado, False)}\n{mensajeCarrito}")
+
+                    op=checkOption(input(":"),2,mensajeCarrito)
+
+                    if op == 1:
+                        añadirACarrito(productoBuscado,Producto,carrito)
                     continuar = input("Ingrese ENTER para continuar")
+                    break
                 else:
                     print("Producto no encontrado")
                     flag = volverAMenu()
                     if flag == False:
                         break
     if opcion == 2:
-        carrito = añadirACarrito(buscarProducto(checkNum(input("Ingrese código de producto a agregar: ")),productos), Producto)
+        carrito = añadirACarrito(buscarProducto(input("Ingrese código de producto a agregar: "),productos), Producto, carrito)
+        print(carrito[0].getStock())
+        continuar = input("Ingrese ENTER para continuar")
 
 
 

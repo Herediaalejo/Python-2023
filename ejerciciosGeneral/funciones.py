@@ -50,17 +50,30 @@ def listarProductos(productos):
     return productosListados
 
 def buscarProducto(codigo,listaProductos):
+
+    codigo = codigo.lower()
+
+    if codigo.isnumeric():
+        codigo = int(codigo)
  
     for i in range(len(listaProductos)):
         
-        if codigo == listaProductos[i].getCodigo():
+        if codigo == listaProductos[i].getCodigo() or codigo == (listaProductos[i].getNombre()).lower():
             productoEncontrado = listaProductos[i]
             return productoEncontrado
     return False
         
 def añadirACarrito(producto, clase, carrito):
     if isinstance(producto, clase):
-        carrito.append(producto)
+        cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
+        if cantidad <= producto.getStock():
+            producto.setStock(producto.getStock()-cantidad)
+            productoCarrito = producto
+            productoCarrito.setStock(cantidad)
+            print(productoCarrito.getStock())
+            carrito.append(productoCarrito)
+            print("Producto agregado al carrito!")
+        
         return carrito
     print("Producto no encontrado")
     return carrito
@@ -72,6 +85,7 @@ def volverAMenu():
     1)Si
     2)No
     """
+    print(menu)
     op = checkOption(input(":"),2,menu)
 
     if op == 1:
@@ -87,16 +101,17 @@ def productosBreve(productos,producto="",todos=True):
     if todos:
 
         infoProductos = listarProductos(productos)
-        
+
         for i in range(len(infoProductos)):
             for k in range(4):
-                if k==0:
-                    productoBreve = productoBreve + str(infoProductos[i][k]) + (" " * (14 - len(str(infoProductos[i][k])))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
-                elif k==1:
-                    productoBreve = productoBreve + "$ " + str(infoProductos[i][k]) + (" " * (6 - len(str(infoProductos[i][k]))))
-                elif k==2:
-                    productoBreve = productoBreve + "Stock: " + str(infoProductos[i][4]) + (" " * (4 - len(str(infoProductos[i][4]))))
-                elif k==3:
+                if infoProductos[i][4]>0:
+                    if k==0:
+                        productoBreve = productoBreve + str(infoProductos[i][k]) + (" " * (14 - len(str(infoProductos[i][k])))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
+                    elif k==1:
+                        productoBreve = productoBreve + "$ " + str(infoProductos[i][k]) + (" " * (6 - len(str(infoProductos[i][k]))))
+                    elif k==2:
+                        productoBreve = productoBreve + "Stock: " + str(infoProductos[i][4]) + (" " * (4 - len(str(infoProductos[i][4]))))
+                    elif k==3:
                         productoBreve = productoBreve + "Cod: " + str(infoProductos[i][6]) + (" " * (4 - len(str(infoProductos[i][6]))))
             productoBreve = productoBreve + "\n"
     else:
@@ -109,7 +124,10 @@ def productosBreve(productos,producto="",todos=True):
                 
         productoBreve = productoBreve + "Cod: " + str(producto.getCodigo()) + (" " * (4 - len(str(producto.getCodigo()))))
         
-    return productoBreve
+    if len(productoBreve)>0:
+        return productoBreve
+    else:
+        return ("No hay productos disponibles")
 
 def productosDetallado(productos=[],producto="",todos=True):
             
@@ -118,35 +136,37 @@ def productosDetallado(productos=[],producto="",todos=True):
             for i in range(len(productos)):
                     
                 productoDetallado = f"""
-            PRODUCTO: {productos[i].getNombre()}
+----------------------------------
+PRODUCTO: {productos[i].getNombre()}
 
-            PRECIO: ${productos[i].getPrecio()}
+PRECIO: ${productos[i].getPrecio()}
 
-            Marca: {productos[i].getMarca()}
+Marca: {productos[i].getMarca()}
 
-            Color: {productos[i].getColor()}
+Color: {productos[i].getColor()}
 
-            Características: {productos[i].getCaracteristicas()}
+Características: {productos[i].getCaracteristicas()}
 
-            Stock: {productos[i].getStock()}
-
-
+Stock: {productos[i].getStock()}
+----------------------------------
                         """
         else:
             
             productoDetallado = f"""
-            PRODUCTO: {producto.getNombre()}
+----------------------------------
+PRODUCTO: {producto.getNombre()}
 
-            PRECIO: ${producto.getPrecio()}
+PRECIO: ${producto.getPrecio()}
 
-            Marca: {producto.getMarca()}
+Marca: {producto.getMarca()}
 
-            Color: {producto.getColor()}
+Color: {producto.getColor()}
 
-            Características: {producto.getCaracteristicas()}
+Características: {producto.getCaracteristicas()}
 
-            Stock: {producto.getStock()}
-                        """
+Stock: {producto.getStock()}
+---------------------------------
+"""
    
         return productoDetallado
 
