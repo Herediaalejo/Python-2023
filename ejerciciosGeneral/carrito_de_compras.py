@@ -37,18 +37,13 @@ class Producto():
     def getCaracteristicas(self):
         return self.caracteristicas
     
-producto1 = Producto(1,"IPHONE X","APPLE",1000,23,"Rojo","Camara 20MP, 8GB RAM, IOS 15")
+producto1 = Producto(1,"IPHONE X","APPLE",1000,23,"Rojo","Cámara 20MP, 8GB RAM, IOS 15")
 producto2 = Producto(2,"MACBOOK AIR","APPLE",3000,10,"Gris claro","Apple M1 8GB de RAM 256GB SSD, Apple M1 8-Core GPU 60 Hz 2560x1600px")
 producto3 = Producto(3,"VISION PRO","APPLE",4000,15,"Gris","Full vision 360°")
-producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Camara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
-
-
-
+producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Cámara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
 
 carrito = []
 op = 0
-
-
 
 """ os.system("cls") """
 while True:
@@ -56,7 +51,14 @@ while True:
 
     mensajeProductosBreve = productosBreve(productos, 0, True)
 
+    mensajeProductosDetallado = productosDetallado(productos, 0, True)
+
     mensajeCarritoBreve = productosBreve(carrito,0,True)
+
+    """ mensajeCarritoDetallado = productosDetallado(carrito,0,True) """
+
+    menu2 = False
+    
 
     menu = f"""
 Bienvenido a la tienda!!!!
@@ -64,15 +66,13 @@ Bienvenido a la tienda!!!!
 Estos son nuestros productos disponibles actualmente:
 
 {mensajeProductosBreve}
-
 Todos los precios están expresados en dólares
 
 ¿Que desea realizar? Ingrese una opción:
 
 1) Buscar producto
 2) Añadir a carrito
-3) Acceder a carrito
-4) Salir
+3) Salir
 """
     if len(carrito)>0:
         menu = f"""
@@ -92,18 +92,24 @@ Su carrito:
 
 1) Buscar producto
 2) Añadir a carrito
-3) Acceder a carrito
-4) Salir
+3) Información detallada de productos
+4) Modificar compra
+5) Finalizar compra
+6) Salir
 """
-    flag = True
+        menu2 = True
 
-    opcion = checkOption(input(menu+":"),4,menu)
+    flag = False
+    if menu2 == False:
+        opcion = checkOption(input(menu+":"),3,menu)
+    else:
+        opcion = checkOption(input(menu+":"),6,menu)
 
     if opcion == 1:
 
         while True:
 
-            if flag == True:
+            if flag == False:
 
                 productoBuscado = buscarProducto(input("Ingrese código o nombre de producto a buscar: "),productos)
 
@@ -117,21 +123,32 @@ Su carrito:
 
                     if op == 1:
                         añadirACarrito(productoBuscado,Producto,carrito)
-                    continuar = input("Ingrese ENTER para continuar")
-                    break
+
                 else:
                     print("Producto no encontrado")
-                    flag = volverAMenu()
-                    if flag == False:
-                        break
+
+                flag = volverAMenu()
+                if flag == True:
+                    break
     if opcion == 2:
-        carrito = añadirACarrito(buscarProducto(input("Ingrese código de producto a agregar: "),productos), Producto, carrito)
-        print(carrito[0].getStock())
-        continuar = input("Ingrese ENTER para continuar")
 
+        while True:
 
+            carrito = añadirACarrito(buscarProducto(input("Ingrese código de producto a agregar: "),productos), Producto, carrito)
+            continuar = input("Ingrese ENTER para continuar")
+            flag = volverAMenu()
+            if flag == True:        
+                break
+    
+    if opcion == 3 and menu2==False:
+        break
 
+    if opcion == 3 and menu2==True:
+        menu = f"""
+        ¿A que información desea acceder?
 
+        1) Productos en tienda
 
-
-
+        2) Productos en carrito
+        """
+        opcion = checkOption(input(menu+":"),3,menu)
