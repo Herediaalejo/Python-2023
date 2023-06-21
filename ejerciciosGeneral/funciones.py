@@ -151,18 +151,39 @@ def productosDetallado(productos=[],producto="",todos=True):
 
         print(longitud)
 
-        Tabla = """\
+        """Tabla =\
 +---------------------------------------------------------------------------+
 | Cod   Producto    Marca     Precio     Color    Cantidad   Caracteristicas|
 |---------------------------------------------------------------------------|
 {}
 +---------------------------------------------------------------------------+\
-"""
+
 Tabla = (Tabla.format('\n'.join("| {:<8} {:<10} {:>8} {:>6} {:>7} {:>23} |".format(*fila)
  for fila in infoProductos)))
-print (Tabla)
+print (Tabla)"""
 
-        
+        productosDetallado = productoDetallado = "Codigo" + (" " * (longitud[6]-6+3 if longitud[6]-6>0 else 3)) + "Producto" + (" " * (longitud[0]-8+3 if longitud[0]-8>0 else 3)) + "Marca" + (" " * (longitud[2]-5+3 if longitud[2]-5>0 else 3)) + "Precio" + (" " * (longitud[1]-6+3 if longitud[1]-6>0 else 3 )) + "Color" + (" " * (longitud[3]-5+3 if longitud[3]-5>0 else 3)) + "Cantidad" + (" " * (longitud[4]-8+3 if longitud[4]-8>0 else 3 )) + "Características" + (" " * (longitud[5]-15+3 if longitud[5]-15>0 else 3)) + "\n"
+        for i in range(len(infoProductos)):
+            for k in range(7):
+                if i != 0:
+                    if infoProductos[i-1][4]>0:
+                        if k==0:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][6]) + (" " * 8)
+                        elif k==1:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][0]) + (" " * (longitud[0]-len(str(infoProductos[i-1][0]))+3))
+                        elif k==2:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][2]) + (" " * (longitud[2]-len(str(infoProductos[i-1][2]))+3))
+                        elif k==3:
+                            productoDetallado = productoDetallado + "$" + str(infoProductos[i-1][1]) + (" " * (longitud[1]-len(str(infoProductos[i-1][1]))+4))
+                        elif k==4:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][3]) + (" " * (longitud[3]-len(str(infoProductos[i-1][3]))+3))
+                        elif k==5:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][4]) + (" " * (longitud[4]-len(str(infoProductos[i-1][4]))+3))
+                        elif k==6:
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][5]) + (" " * (longitud[5]-len(str(infoProductos[i-1][5]))+3))
+            productoDetallado = productoDetallado + "\n"
+
+
         print(productoDetallado)
 
 
