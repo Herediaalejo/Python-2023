@@ -132,7 +132,6 @@ def productosBreve(productos,producto="",todos=True):
 
 def productosDetallado(productos=[],producto="",todos=True):
 
-    productoDetallado = "------------------------------------------------\n"
 
     if todos:
 
@@ -152,26 +151,42 @@ def productosDetallado(productos=[],producto="",todos=True):
 
         print(longitud)
 
-        productoDetallado = "Codigo" + (" " * 3) + "Producto" + (" " * longitud[0]) + "Marca" + (" " * longitud[2]) + "Precio" + (" " * longitud[1]) + "Color" + (" " * longitud[3]) + "Cantidad" + (" " * longitud[4]) + "Características" + (" " * longitud[5]) + "\n"
+        Tabla = """\
++---------------------------------------------------------------------------+
+| Cod   Producto    Marca     Precio     Color    Cantidad   Caracteristicas|
+|---------------------------------------------------------------------------|
+{}
++---------------------------------------------------------------------------+\
+"""
+Tabla = (Tabla.format('\n'.join("| {:<8} {:<10} {:>8} {:>6} {:>7} {:>23} |".format(*fila)
+ for fila in infoProductos)))
+print (Tabla)
+
+        
+        print(productoDetallado)
+
+
+
+        """productoDetallado = "Codigo" + (" " * 3) + "Producto" + (" " * (longitud[0]-8)) + "Marca" + (" " * (longitud[2]-5)) + "Precio" + (" " * (longitud[1]-6)) + "Color" + (" " * (longitud[3]-5)) + "Cantidad" + (" " * (longitud[4]-8)) + "Características" + (" " * (longitud[5]-15)) + "\n"
 
         for i in range(len(infoProductos)):
             for k in range(7):
                 if i != 0:
                     if infoProductos[i-1][4]>0:
                         if k==0:
-                            productoDetallado = productoDetallado +  str(infoProductos[i-1][6]) + (" " * 7)
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][6]) + (" " * 9)
                         elif k==1:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][0]) + (" " * longitud[0])
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][0]) + (" " * (longitud[0]-len(str(infoProductos[i-1][0]))))
                         elif k==2:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][2]) + (" " * longitud[2])
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][2]) + (" " * (longitud[2]-len(str(infoProductos[i-1][2]))))
                         elif k==3:
-                            productoDetallado = productoDetallado + "$ " + str(infoProductos[i-1][1]) + (" " * longitud[1])
+                            productoDetallado = productoDetallado + "$ " + str(infoProductos[i-1][1]) + (" " * (longitud[1]-len(str(infoProductos[i-1][1]))))
                         elif k==4:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][3]) + (" " * longitud[3])
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][3]) + (" " * (longitud[3]-len(str(infoProductos[i-1][3]))))
                         elif k==5:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][4]) + (" " * longitud[4])
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][4]) + (" " * (longitud[4]-len(str(infoProductos[i-1][4]))))
                         elif k==6:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][5]) + (" " * longitud[5])
+                            productoDetallado = productoDetallado + str(infoProductos[i-1][5]) + (" " * (longitud[5]-len(str(infoProductos[i-1][5]))))
             productoDetallado = productoDetallado + "\n"
     else:
         
@@ -187,7 +202,7 @@ def productosDetallado(productos=[],producto="",todos=True):
         productoDetallado = productoDetallado + "------------------------------------------------"
         print(productoDetallado) 
     else:
-        return ("No hay productos disponibles")
+        return ("No hay productos disponibles")"""
 
 
 
