@@ -416,6 +416,8 @@ while(True):
                         tipoSucesion = "constante"
                     elif razon < 0:
                         tipoSucesion = "alternante"
+                else:
+                    tipoSucesion = "constante"
 
 
                 for i in range(1,cantidadTermino):
