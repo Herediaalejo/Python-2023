@@ -28,18 +28,80 @@ flag=0
 op = ""
 signo = ""
 
+def checkOption(opcion,cantidad,menu=""):
+    while True:
+        try:
+            opcion = int(opcion)
+            for op in range(cantidad+1):
+                if op == 0:
+                    continue
+                if opcion==op:
+                    return opcion
+            os.system("cls")
+            print(menu)
+            print("Valor fuera de rango")
+            opcion = input("Ingrese opcion valida: ")
+            os.system("cls")
+        except ValueError:
+            os.system("cls")
+            print(menu)
+            print("Valor invalido")
+            opcion = input("Ingrese opcion valida: ")
+            os.system("cls")
+
+def checkNum(num):
+    while True:
+        try:
+            num = int(num)
+            return num
+        except ValueError:
+            try:
+                num = float(num)
+                return num
+            except ValueError:
+                try:
+                    num = Fraction(num)
+                    return num
+                except ValueError:
+                    print (f"El valor '{num}' no es un numero")
+                    num = input("Ingrese un valor valido: ")
+
+def checkCant(cantidad,cantidadMinima, cantidadMaxima=0):
+    while True:
+        try:
+            cantidad = int(cantidad)
+            if cantidad < cantidadMinima:
+                cantidad = input("Valor fuera de rango. Ingrese cantidad: ")
+            else:
+                return cantidad
+        except ValueError:
+            cantidad = input("El valor debe ser entero. Ingrese cantidad: ")
+
+
+def get_super(x):
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    super_s = "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
+    res = x.maketrans(''.join(normal), ''.join(super_s))
+    return x.translate(res)
+
+def get_sub(x):
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    sub_s = "ₐ₈CDₑբGₕᵢⱼₖₗₘₙₒₚQᵣₛₜᵤᵥwₓᵧZₐ♭꜀ᑯₑբ₉ₕᵢⱼₖₗₘₙₒₚ૧ᵣₛₜᵤᵥwₓᵧ₂₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎"
+    res = x.maketrans(''.join(normal), ''.join(sub_s))
+    return x.translate(res)
+
 while(True):
 
     os.system("cls")
 
     if(flag==0):
-        opcion = input("¡Bienvenidos al programa de operación de ecuaciones matemáticas! \n Elija la opción que desee: \n 1) Rectas paralela y perpendicular a una dada. \n 2) Análisis de una función lineal.\n 3) Análisis de una función cuadrática. \n:")
+        opcion = input("¡Bienvenidos al programa de operación de ecuaciones matemáticas! \n Elija la opción que desee: \n 1) Rectas paralela y perpendicular a una dada \n 2) Análisis de una función lineal\n 3) Análisis de una función cuadrática \n 4) Sucesiones\n 5) Salir\n:")
     else:
-        opcion = input("Ingrese una opción valida \n 1) Rectas paralela y perpendicular a una dada. \n 2) Análisis de una función lineal.\n 3) Análisis de una función cuadrática. \n:")
+        opcion = input("Ingrese una opción valida \n 1) Rectas paralela y perpendicular a una dada \n 2) Análisis de una función lineal\n 3) Análisis de una función cuadrática \n 4) Sucesiones\n 5) Salir\n:")
 
     if(opcion.isnumeric()):
         opcion=int(opcion)
-        if(opcion>3 or opcion<0):
+        if(opcion>4 or opcion<0):
             flag=1
     else:
         flag=1
@@ -278,7 +340,93 @@ while(True):
 
             if (op == "n" or op =="N"):
                 break
+    if opcion == 4:
         
+        opcion = checkOption(input("¿Que tipo de sucesiones desea calcular?\n 1) Sucesiones aritméticas\n 2) Sucesiones geométricas\n 3) Regresar a menu principal\n:"),3," 1) Sucesiones aritméticas\n 2) Sucesiones geométricas\n 3) Regresar a menu principal\n:")
+        
+        if opcion == 1:
+
+            while True:
+
+                terminoSucesion = checkNum(input("Ingrese primer término de la sucesión: "))
+
+                diferencia = checkNum(input("Ingrese diferencia de la sucesión: "))
+
+                cantidadTermino = checkCant(input("Ingrese cantidad de términos que desea obtener(mínimo 5): "),5)
+
+                sucesion = ""
+
+                tipoSucesion = ""
+
+                if diferencia > 0:
+                    tipoSucesion = "creciente"
+                elif diferencia < 0:
+                    tipoSucesion = "decreciente"
+                elif diferencia == 0:
+                    tipoSucesion = "constante"
+                
+                calculo = f"a₁ = {terminoSucesion}\n"
+
+                terminoSiguiente = terminoSucesion
+
+                for i in range(cantidadTermino-1):
+                    sucesion += str(terminoSiguiente) + ", "
+                    calculo += f"a{get_sub(str(i+1))}{get_sub('+1')} = {terminoSiguiente} + {diferencia}\n"  
+                    terminoSiguiente = terminoSiguiente + diferencia
+                sucesion += str(terminoSiguiente) + ", ..."
+                print(f"\nSUCESIÓN ARITMÉTICA\n-------------------\nPrimer término: {terminoSucesion}\nDiferencia: {diferencia}\nFórmula: aₙ₊₁ = aₙ + d\n\nCálculo: \n{calculo}\nResultado: {sucesion}\nLa sucesión es {tipoSucesion}")
+                
+                op=checkOption(input("\n¿Desea seguir realizando sucesiones aritméticas? \n1)Si\n2)No \n:"),2,"\n¿Desea seguir realizando sucesiones aritméticas? \n1)Si\n2)No \n:")
+                if op ==1:
+                    continue
+                if op == 2:
+                    break
+        if opcion == 2:
+
+            while True:
+
+                terminoSucesion = checkNum(input("Ingrese primer termino de la sucesión: "))
+
+                razon = checkNum(input("Ingrese razón de la sucesión: "))
+
+                cantidadTermino = checkCant(checkNum(input("Ingrese cantidad de términos que desea obtener(mínimo 5): ")),5)
+
+                sucesion = ""
+                
+                calculo = f"a₁ = {terminoSucesion}\n"
+
+                terminoSiguiente = terminoSucesion
+
+                tipoSucesion = ""
+
+                if razon > 1:
+                    tipoSucesion = "creciente"
+                elif  razon > 0 and razon < 1:
+                    tipoSucesion = "decreciente"
+                elif razon == 1:
+                    tipoSucesion = "constante"
+                elif razon < 0:
+                    tipoSucesion = "alternante"
+
+                for i in range(1,cantidadTermino):
+                    sucesion += str(terminoSiguiente) + ", "
+                    calculo += f"a{get_sub(str(i+1))} = {terminoSucesion} * {razon}{get_super(str(i+1))}{get_super(str(-1))}\n"  
+                    terminoSiguiente = terminoSucesion * (razon ** (i+1-1))
+                sucesion += str(terminoSiguiente) + ", ..."
+                print(f"\nSUCESIÓN GEOMÉTRICA\n-------------------\nPrimer término: {terminoSucesion}\nRazón: {razon}\nFórmula: aₙ = a₁ * rⁿ⁻¹\n\nCálculo: \n{calculo}\nResultado: {sucesion}\nLa sucesión es {tipoSucesion}")
+                
+                op=checkOption(input("\n¿Desea seguir realizando sucesiones geométricas? \n1)Si\n2)No \n:"),2,"\n¿Desea seguir realizando sucesiones geométricas? \n1)Si\n2)No \n:")
+                if op ==1:
+                    continue
+                if op == 2:
+                    break
+        if opcion == 3:
+            break
+
+    if opcion == 5:
+        break
+
+
         
         
         
