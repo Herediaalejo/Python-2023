@@ -398,15 +398,25 @@ while(True):
                 terminoSiguiente = terminoSucesion
 
                 tipoSucesion = ""
+                if terminoSucesion > 0:
+                    if razon > 1:
+                        tipoSucesion = "creciente"
+                    elif  razon > 0 and razon < 1:
+                        tipoSucesion = "decreciente"
+                    elif razon == 1:
+                        tipoSucesion = "constante"
+                    elif razon < 0:
+                        tipoSucesion = "alternante"
+                elif terminoSucesion < 0:
+                    if razon > 1:
+                        tipoSucesion = "decreciente"
+                    elif  razon > 0 and razon < 1:
+                        tipoSucesion = "creciente"
+                    elif razon == 1:
+                        tipoSucesion = "constante"
+                    elif razon < 0:
+                        tipoSucesion = "alternante"
 
-                if razon > 1:
-                    tipoSucesion = "creciente"
-                elif  razon > 0 and razon < 1:
-                    tipoSucesion = "decreciente"
-                elif razon == 1:
-                    tipoSucesion = "constante"
-                elif razon < 0:
-                    tipoSucesion = "alternante"
 
                 for i in range(1,cantidadTermino):
                     sucesion += str(terminoSiguiente) + ", "
