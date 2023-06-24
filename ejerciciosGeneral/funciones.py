@@ -66,7 +66,8 @@ def listarProductos(productos,carritoFlag=False):
 
 def buscarProducto(codigo,listaProductos):
     cont = 0
-
+    palabraBuscada = ""
+    palabraEncontrada = ""
     if codigo.isnumeric():
         codigo = int(codigo)
     else:
