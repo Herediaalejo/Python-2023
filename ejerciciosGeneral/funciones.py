@@ -105,12 +105,26 @@ def añadirACarrito(producto, clase, subclase, carrito):
         cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
 
         for i in range(len(carrito)):
-            if producto.getNombre()==carrito[i].getNombre():
-                producto.setStock(producto.getStock()-cantidad)
-                carrito[i].setStock(carrito[i].getStock()+cantidad)
-                carrito[i].setSubtotal(carrito[i].getSubtotal()+cantidad*carrito[i].getPrecio())
-                print("\nProducto agregado al carrito!")
-                return True
+            if cantidad <= producto.getStock() and cantidad>0:
+                if producto.getNombre()==carrito[i].getNombre():
+                    producto.setStock(producto.getStock()-cantidad)
+                    carrito[i].setStock(carrito[i].getStock()+cantidad)
+                    carrito[i].setSubtotal(carrito[i].getSubtotal()+cantidad*carrito[i].getPrecio())
+                    print("\nProducto agregado al carrito!")
+                    return True
+                
+            elif cantidad == 0:
+                print("La cantidad no puede ser 0")
+                return False
+            
+            elif cantidad < 0 :
+                print("La cantidad no puede ser negativa")
+                return False
+    
+            else:
+                print("La cantidad supera el stock disponible")
+                return False
+            
 
         if cantidad <= producto.getStock() and cantidad>0:
             productoCarrito = subclase(producto.getCodigo(),producto.getNombre(),producto.getMarca(),producto.getPrecio(),cantidad,producto.getColor(),producto.getCaracteristicas())
@@ -503,6 +517,8 @@ def modificarProducto(carrito,productos):
                 productoCarrito.setStock(productoCarrito.getStock()+cantidad)
                 productoCarrito.setSubtotal(productoCarrito.getSubtotal()+cantidad*productoCarrito.getPrecio())
                 return False
+            else:
+                print("Cantidad ingresada es mayor a la cantidad de producto en carrito")
         elif op == 2:
             cantidad = checkNum(input(f"¿En cuanto desea reducir la cantidad?\nCantidad actual: {productoCarrito.getStock()}\n:"))
             if cantidad <= 0:
@@ -513,6 +529,8 @@ def modificarProducto(carrito,productos):
                 productoCarrito.setStock(productoCarrito.getStock()-cantidad)
                 productoCarrito.setSubtotal(productoCarrito.getSubtotal()-cantidad*productoCarrito.getPrecio())
                 return False
+            else:
+                print("Cantidad ingresada es mayor a la cantidad de producto en carrito")
         elif op == 3:
             producto.setStock(productoCarrito.getStock()+producto.getStock())
             carrito.remove(buscarProducto(cod,carrito))
