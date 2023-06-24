@@ -198,6 +198,8 @@ while True:
                 print("Gracias por comprar!!! La dirección para recibir sus productos y pagar es la siguiente: Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
                 carrito.clear()
                 volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                if volver == 2:
+                    break
                 menu1 = True
                 menu2 = False
                 menu3 = False
@@ -209,6 +211,8 @@ while True:
                 print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
                 carrito.clear()
                 volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                if volver == 2:
+                    break
                 menu1 = True
                 menu2 = False
                 menu3 = False
@@ -220,6 +224,8 @@ while True:
                 print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
                 carrito.clear()
                 volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                if volver == 2:
+                    break
                 menu1 = True
                 menu2 = False
                 menu3 = False
