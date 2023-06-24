@@ -55,7 +55,7 @@ producto3 = Producto(3,"VISION PRO","APPLE",4000,15,"Gris","Full vision 360°")
 producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Cámara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
 producto5 = Producto(5,"APPLE WATCH","APPLE",400,33,"Rojo","GPS - Caja de aluminio medianoche 45 mm - Correa deportiva medianoche")
 producto6 = Producto(6,"MONITOR GAMER","SAMSUNG",300,7,"Negro","Pantalla led de 22, resolución de 1920px-1080px")
-producto7 = Producto(7,"AIR PODS","APPLE",200,55,"Blanco","Cámara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
+producto7 = Producto(7,"AIR PODS","APPLE",200,55,"Blanco","Control táctil. Resistencia al agua y al sudor")
 
 
 compras = []
