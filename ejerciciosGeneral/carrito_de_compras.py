@@ -173,17 +173,21 @@ while True:
             break
     else:
         if opcion == 4:
-            print(productosBreve(carrito,0,True,True))
-            modificarProducto(carrito,productos)
-            menu1 = False
-            menu2 = False
-            menu3 = True
-            menu6 = False
-            if len(carrito)==0:
-                menu1 = True
+            while True:
+                print(productosBreve(carrito,0,True,True))
+                modificarProducto(carrito,productos)
+                menu1 = False
                 menu2 = False
-                menu3 = False
+                menu3 = True
                 menu6 = False
+                if len(carrito)==0:
+                    menu1 = True
+                    menu2 = False
+                    menu3 = False
+                    menu6 = False
+                flag = volverAMenu()
+                if flag == True:        
+                    break
         if opcion == 5:
             print(productosDetallado(carrito,0,True,True))
 

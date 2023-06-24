@@ -490,26 +490,33 @@ Su carrito:
 def modificarProducto(carrito,productos):
     cod=input("Ingrese codigo o nombre de producto a modificar: ")
     productoCarrito= buscarProducto(cod,carrito)
-    producto = buscarProducto(cod,productos)
-    op = checkOption(input("¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:"),3,"¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:")
-    if op == 1:
-        cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
-        if cantidad <= producto.getStock():
-            producto.setStock(producto.getStock()-cantidad)
-            productoCarrito.setStock(productoCarrito.getStock()+cantidad)
-            productoCarrito.setSubtotal(productoCarrito.getSubtotal()+cantidad*productoCarrito.getPrecio())
-            return False
-    elif op == 2:
-        cantidad = checkNum(input(f"¿En cuanto desea reducir la cantidad?\nCantidad actual: {productoCarrito.getStock()}\n:"))
-        if cantidad <= productoCarrito.getStock():
-            producto.setStock(producto.getStock()+cantidad)
-            productoCarrito.setStock(productoCarrito.getStock()-cantidad)
-            productoCarrito.setSubtotal(productoCarrito.getSubtotal()-cantidad*productoCarrito.getPrecio())
-            return False
-    elif op == 3:
-        producto.setStock(productoCarrito.getStock()+producto.getStock())
-        carrito.remove(buscarProducto(cod,carrito))
-        return True
+    if productoCarrito != False:
+        producto = buscarProducto(cod,productos)
+        op = checkOption(input("¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:"),3,"¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:")
+        if op == 1:
+            cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
+            if cantidad <= 0:
+                print("La cantidad a añadir no puede ser menor o igual a 0")
+                return False
+            if cantidad <= producto.getStock():
+                producto.setStock(producto.getStock()-cantidad)
+                productoCarrito.setStock(productoCarrito.getStock()+cantidad)
+                productoCarrito.setSubtotal(productoCarrito.getSubtotal()+cantidad*productoCarrito.getPrecio())
+                return False
+        elif op == 2:
+            cantidad = checkNum(input(f"¿En cuanto desea reducir la cantidad?\nCantidad actual: {productoCarrito.getStock()}\n:"))
+            if cantidad <= 0:
+                print("La cantidad a reducir no puede ser menor o igual a 0")
+                return False
+            if cantidad <= productoCarrito.getStock():
+                producto.setStock(producto.getStock()+cantidad)
+                productoCarrito.setStock(productoCarrito.getStock()-cantidad)
+                productoCarrito.setSubtotal(productoCarrito.getSubtotal()-cantidad*productoCarrito.getPrecio())
+                return False
+        elif op == 3:
+            producto.setStock(productoCarrito.getStock()+producto.getStock())
+            carrito.remove(buscarProducto(cod,carrito))
+            return True
     
 
 
