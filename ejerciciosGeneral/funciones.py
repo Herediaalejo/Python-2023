@@ -32,13 +32,28 @@ def checkOption(opcion,cantidad,menu=""):
             print("Valor invalido")
             opcion = input("Ingrese opcion valida: ")
 
-def listarProductos(productos):
+def listarProductos(productos,carritoFlag=False):
     productosListados = []
 
-    for i in range(len(productos)):
-        productosListados.append([0]*7)
+    if carritoFlag:
+        for i in range(len(productos)):
+            productosListados.append([0]*8)
 
-    for i in range(len(productos)):
+        for i in range(len(productos)):
+            productosListados[i][0] = productos[i].getNombre()
+            productosListados[i][1] = productos[i].getPrecio()
+            productosListados[i][2] = productos[i].getMarca()
+            productosListados[i][3] = productos[i].getColor()
+            productosListados[i][4] = productos[i].getStock()
+            productosListados[i][5] = productos[i].getCaracteristicas()
+            productosListados[i][6] = productos[i].getCodigo()
+            productosListados[i][7] = productos[i].getSubtotal()
+    else:
+
+        for i in range(len(productos)):
+            productosListados.append([0]*7)
+
+        for i in range(len(productos)):
             productosListados[i][0] = productos[i].getNombre()
             productosListados[i][1] = productos[i].getPrecio()
             productosListados[i][2] = productos[i].getMarca()
@@ -51,32 +66,42 @@ def listarProductos(productos):
 
 def buscarProducto(codigo,listaProductos):
 
-    codigo = codigo.lower()
-
     if codigo.isnumeric():
         codigo = int(codigo)
- 
+    else:
+        codigo = codigo.lower()
+
     for i in range(len(listaProductos)):
         
         if codigo == listaProductos[i].getCodigo() or codigo == (listaProductos[i].getNombre()).lower():
             productoEncontrado = listaProductos[i]
             return productoEncontrado
+    print("Producto no encontrado")
     return False
         
-def añadirACarrito(producto, clase, carrito):
+def añadirACarrito(producto, clase, subclase, carrito):
+
     if isinstance(producto, clase):
         cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
-        if cantidad <= producto.getStock():
-            productoCarrito = clase(producto.getCodigo(),producto.getNombre(),producto.getMarca(),producto.getPrecio(),cantidad,producto.getColor(),producto.getCaracteristicas())
+
+        if cantidad <= producto.getStock() and cantidad>0:
+            productoCarrito = subclase(producto.getCodigo(),producto.getNombre(),producto.getMarca(),producto.getPrecio(),cantidad,producto.getColor(),producto.getCaracteristicas())
             carrito.append(productoCarrito)
             producto.setStock(producto.getStock()-cantidad)
-            print("Producto agregado al carrito!")
-            return carrito
+            print("\nProducto agregado al carrito!")
+            return True
+        
+        elif cantidad == 0:
+            print("La cantidad no puede ser 0")
+            return False
+        
+        elif cantidad < 0 :
+            print("La cantidad no puede ser negativa")
+            return False
+        
         else:
             print("La cantidad supera el stock disponible")
-            return carrito
-    print("Producto no encontrado")
-    return carrito
+            return False
 
 def volverAMenu():
     op = ""
@@ -84,7 +109,7 @@ def volverAMenu():
 ¿Desea volver al menu?
 1)Si
 2)No
-    """
+"""
     print(menu)
     op = checkOption(input(":"),2,menu)
 
@@ -94,46 +119,159 @@ def volverAMenu():
         return False
 
 
-def productosBreve(productos,producto="",todos=True):
+def productosBreve(productos=[],producto="",todos=True,carritoFlag=False):
 
-    productoBreve = "------------------------------------------------\n"
+    longitud = []
 
-    if todos:
+    total = 0
+
+    if carritoFlag:
+
+        infoProductos = listarProductos(productos, True)
+
+        for i in range(8):
+            longitud.append([0]*len(productos))
+
+        for i in range(8):
+            for k in range(len(productos)):
+                longitud[i][k]=len(str(infoProductos[k][i]))
+        
+        for i in range(8):
+            longitud[i] = max(longitud[i])
+        
+    
+        totalGuion = longitud[6] + 8 + longitud[0] + 4  + longitud[1] + 4 + longitud[4] + 8 + longitud[7] + 4 + 5
+
+        if todos:
+
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Subtotal", longitud[7]+5)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            for producto in productos:
+                if producto.getStock()>0:
+                    tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, "$"+str(producto.getSubtotal()), longitud[7]+5)
+                    total = total + producto.getSubtotal()
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            tabla =  tabla + "\n" + "|  {:<{}}|".format(f"Total: ${total}",totalGuion-2)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+        else:
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Subtotal", longitud[7]+5)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getSubtotal(), longitud[7]+5)
+                
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+    else:
 
         infoProductos = listarProductos(productos)
 
-        for i in range(len(infoProductos)):
-            for k in range(4):
-                if infoProductos[i][4]>0:
-                    if k==0:
-                        productoBreve = productoBreve + str(infoProductos[i][k]) + (" " * (14 - len(str(infoProductos[i][k])))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
-                    elif k==1:
-                        productoBreve = productoBreve + "$ " + str(infoProductos[i][k]) + (" " * (6 - len(str(infoProductos[i][k]))))
-                    elif k==2:
-                        productoBreve = productoBreve + "Cantidad: " + str(infoProductos[i][4]) + (" " * (4 - len(str(infoProductos[i][4]))))
-                    elif k==3:
-                        productoBreve = productoBreve + "Cod: " + str(infoProductos[i][6]) + (" " * (4 - len(str(infoProductos[i][6]))))
-            productoBreve = productoBreve + "\n"
-    else:
+        for i in range(7):
+            longitud.append([0]*len(productos))
+
+        for i in range(7):
+            for k in range(len(productos)):
+                longitud[i][k]=len(str(infoProductos[k][i]))
         
-        productoBreve = productoBreve + str(producto.getNombre()) + (" " * (14 - len(str(producto.getNombre())))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
-                
-        productoBreve = productoBreve + "$ " + str(producto.getPrecio()) + (" " * (6 - len(str(producto.getPrecio()))))
-                 
-        productoBreve = productoBreve + "Cantidad: " + str(producto.getStock()) + (" " * (4 - len(str(producto.getStock()))))
-                
-        productoBreve = productoBreve + "Cod: " + str(producto.getCodigo()) + (" " * (4 - len(str(producto.getCodigo()))))
+        for i in range(7):
+            longitud[i] = max(longitud[i])
         
-    if len(productoBreve)>0:
-        productoBreve = productoBreve + "------------------------------------------------"
-        return productoBreve
+        totalGuion = longitud[6] + 8 + longitud[0] + 4  + longitud[1] + 4 + longitud[4] + 8 + 3
+        if todos:
+            
+            
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            for producto in productos:
+                if producto.getStock()>0:
+                    tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+        else:
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8)
+                
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+    
+    if len(productos)>0:
+        return tabla
     else:
-        return ("No hay productos disponibles")
+        return "No hay producto disponibles en este momento"
 
-def productosDetallado(productos=[],producto="",todos=True):
+def productosDetallado(productos=[],producto="",todos=True, carritoFlag=False):
 
+    total = 0
 
-    if todos:
+    if carritoFlag:
+        infoProductos = listarProductos(productos,True)
+
+        longitud = []
+
+        for i in range(8):
+            longitud.append([0]*len(productos))
+
+        for i in range(8):
+            for k in range(len(productos)):
+                longitud[i][k]=len(str(infoProductos[k][i]))
+        
+        for i in range(8):
+            longitud[i] = max(longitud[i])
+        
+        totalGuion = longitud[6] + 8 + longitud[0] + 4 + longitud[2] + 4 + longitud[3] + 4 + longitud[1] + 4 + longitud[4] + 8 + longitud[5] + longitud[7] + 4 + 12
+
+        if todos:
+            
+            
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Marca",longitud[2]+4, "Color",longitud[3]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Características",longitud[5], "Subtotal", longitud[7]+5)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            for producto in productos:
+                if producto.getStock()>0:
+                    tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, producto.getMarca(),longitud[2]+4, producto.getColor(),longitud[3]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getCaracteristicas(),longitud[5], "$"+str(producto.getSubtotal()), longitud[7]+5)
+                    total = total + producto.getSubtotal()
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            tabla =  tabla + "\n" + "|  {:<{}}|".format(f"Total: ${total}",totalGuion-2)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+        else:
+            
+            tabla = "+" + "-"*totalGuion + "+"
+        
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |{:^{}}|".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Marca",longitud[2]+4, "Color",longitud[3]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Características",longitud[5], "Subtotal", longitud[7]+5)
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, producto.getMarca(),longitud[2]+4, producto.getColor(),longitud[3]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getCaracteristicas(),longitud[5], "$"+str(producto.getSubtotal()), longitud[7]+5)
+                
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+    else:
 
         infoProductos = listarProductos(productos)
 
@@ -148,93 +286,196 @@ def productosDetallado(productos=[],producto="",todos=True):
         
         for i in range(7):
             longitud[i] = max(longitud[i])
-
-        print(longitud)
-
-        """Tabla =\
-+---------------------------------------------------------------------------+
-| Cod   Producto    Marca     Precio     Color    Cantidad   Caracteristicas|
-|---------------------------------------------------------------------------|
-{}
-+---------------------------------------------------------------------------+\
-
-Tabla = (Tabla.format('\n'.join("| {:<8} {:<10} {:>8} {:>6} {:>7} {:>23} |".format(*fila)
- for fila in infoProductos)))
-print (Tabla)"""
-
-        productoDetallado="---------------------------------------------------------------------------------------------------------------------------------------------\n"
         
-        productoDetallado = productoDetallado + "Codigo" + (" " * (longitud[6]-6+3 if longitud[6]-6>0 else 3)) + "Producto" + (" " * (longitud[0]-8+3 if longitud[0]-8>0 else 3)) + "Marca" + (" " * (longitud[2]-5+3 if longitud[2]-5>0 else 3)) + "Precio" + (" " * (longitud[1]-6+3 if longitud[1]-6>0 else 3 )) + "Color" + (" " * (longitud[3]-5+3 if longitud[3]-5>0 else 3)) + "Cantidad" + (" " * (longitud[4]-8+3 if longitud[4]-8>0 else 3 )) + "Características" + (" " * (longitud[5]-15+3 if longitud[5]-15>0 else 3)) + "\n"
+        totalGuion = longitud[6] + 8 + longitud[0] + 4 + longitud[2] + 4 + longitud[3] + 4 + longitud[1] + 4 + longitud[4] + 8 + longitud[5] + 10
+
+        if todos:
+            
+            
+            tabla = "+" + "-"*totalGuion + "+"
         
-        productoDetallado = productoDetallado + "---------------------------------------------------------------------------------------------------------------------------------------------"
-        
-        for i in range(len(infoProductos)):
-            for k in range(7):
-                if i != 0:
-                    if infoProductos[i-1][4]>0:
-                        if k==0:
-                            productoDetallado = productoDetallado + (" " * 2) + str(infoProductos[i-1][6]) + (" " * 6)
-                        elif k==1:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][0]) + (" " * (longitud[0]-len(str(infoProductos[i-1][0]))+3))
-                        elif k==2:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][2]) + (" " * (longitud[2]-len(str(infoProductos[i-1][2]))+3))
-                        elif k==3:
-                            productoDetallado = productoDetallado + "$" + str(infoProductos[i-1][1]) + (" " * (longitud[1]-len(str(infoProductos[i-1][1]))+4))
-                        elif k==4:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][3]) + (" " * (longitud[3]-len(str(infoProductos[i-1][3]))+3))
-                        elif k==5:
-                            productoDetallado = productoDetallado + (" " * (longitud[4]-len(str(infoProductos[i-1][4]))+3)) + str(infoProductos[i-1][4]) + (" " * (longitud[4]-len(str(infoProductos[i-1][4]))+6))
-                        elif k==6:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][5]) + (" " * (longitud[5]-len(str(infoProductos[i-1][5]))+3))
-            productoDetallado = productoDetallado + "\n"
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Marca",longitud[2]+4, "Color",longitud[3]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Características",longitud[5])
 
-        productoDetallado = productoDetallado + "---------------------------------------------------------------------------------------------------------------------------------------------"
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
 
-
-        print(productoDetallado)
-
-
-
-        """productoDetallado = "Codigo" + (" " * 3) + "Producto" + (" " * (longitud[0]-8)) + "Marca" + (" " * (longitud[2]-5)) + "Precio" + (" " * (longitud[1]-6)) + "Color" + (" " * (longitud[3]-5)) + "Cantidad" + (" " * (longitud[4]-8)) + "Características" + (" " * (longitud[5]-15)) + "\n"
-
-        for i in range(len(infoProductos)):
-            for k in range(7):
-                if i != 0:
-                    if infoProductos[i-1][4]>0:
-                        if k==0:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][6]) + (" " * 9)
-                        elif k==1:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][0]) + (" " * (longitud[0]-len(str(infoProductos[i-1][0]))))
-                        elif k==2:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][2]) + (" " * (longitud[2]-len(str(infoProductos[i-1][2]))))
-                        elif k==3:
-                            productoDetallado = productoDetallado + "$ " + str(infoProductos[i-1][1]) + (" " * (longitud[1]-len(str(infoProductos[i-1][1]))))
-                        elif k==4:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][3]) + (" " * (longitud[3]-len(str(infoProductos[i-1][3]))))
-                        elif k==5:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][4]) + (" " * (longitud[4]-len(str(infoProductos[i-1][4]))))
-                        elif k==6:
-                            productoDetallado = productoDetallado + str(infoProductos[i-1][5]) + (" " * (longitud[5]-len(str(infoProductos[i-1][5]))))
-            productoDetallado = productoDetallado + "\n"
-    else:
-        
-        productoDetallado = productoDetallado + str(producto.getNombre()) + (" " * (14 - len(str(producto.getNombre())))) #Formula para alinear los caracteres, en este caso 14 es el máximo de caracteres
+            for producto in productos:
+                if producto.getStock()>0:
+                    tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, producto.getMarca(),longitud[2]+4, producto.getColor(),longitud[3]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getCaracteristicas(),longitud[5])
                 
-        productoDetallado = productoDetallado + "$ " + str(producto.getPrecio()) + (" " * (6 - len(str(producto.getPrecio()))))
-                
-        productoDetallado = productoDetallado + "Cantidad: " + str(producto.getStock()) + (" " * (4 - len(str(producto.getStock()))))
-                
-        productoDetallado = productoDetallado + "Cod: " + str(producto.getCodigo()) + (" " * (4 - len(str(producto.getCodigo()))))
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+        else:
+            tabla = "+" + "-"*totalGuion + "+"
         
-    if len(productoDetallado)>0:
-        productoDetallado = productoDetallado + "------------------------------------------------"
-        print(productoDetallado) 
-    else:
-        return ("No hay productos disponibles")"""
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |".format("Código",longitud[6]+8,"Producto", longitud[0]+4, "Marca",longitud[2]+4, "Color",longitud[3]+4, "Precio", longitud[1]+4, "Cantidad", longitud[4]+8, "Características",longitud[5])
+
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+            
+            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|  {:<{}}  |".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, producto.getMarca(),longitud[2]+4, producto.getColor(),longitud[3]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getCaracteristicas(),longitud[5])
+                
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+    
+    return tabla
+
+def tipoMenu(op,productos,carrito=[]):
+    menu = ""
+    if op == 1:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosBreve(productos, 0, True)}
+
+Todos los precios están expresados en dólares
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información detallada de productos
+4) Salir
+"""
+    elif op == 2:
+
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosDetallado(productos, 0, True)}
+
+Todos los precios están expresados en dólares
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información breve de productos
+4) Salir
+"""
+        
+    elif op == 3:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosBreve(productos, 0, True)}
+
+Todos los precios están expresados en dólares
+
+Su carrito:
+
+{productosBreve(carrito,0,True,True)}
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información detallada de productos
+4) Modificar compra
+5) Finalizar compra
+6) Salir
+"""
+    elif op == 4:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosDetallado(productos,0,True)}
+
+Todos los precios están expresados en dólares
+
+Su carrito:
+
+{productosBreve(carrito,0,True,True)}
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información detallada de productos
+4) Modificar compra
+5) Finalizar compra
+6) Salir
+"""
+    elif op == 5:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosBreve(productos, 0, True)}
+
+Todos los precios están expresados en dólares
+
+Su carrito:
+
+{productosDetallado(carrito,0,True,True)}
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información detallada de productos
+4) Modificar compra
+5) Finalizar compra
+6) Salir
+"""
+        
+    elif op == 6:
+        menu = f"""
+Bienvenido a la tienda!!!!
+
+Estos son nuestros productos disponibles actualmente:
+
+{productosDetallado(productos,0,True)}
+
+Todos los precios están expresados en dólares
+
+Su carrito:
+
+{productosDetallado(carrito,0,True,True)}
+
+¿Que desea realizar? Ingrese una opción:
+
+1) Buscar producto
+2) Añadir a carrito
+3) Información breve de productos
+4) Modificar compra
+5) Finalizar compra
+6) Salir
+"""
+    return menu
 
 
-
-
+def modificarProducto(carrito,productos):
+    cod=input("Ingrese codigo o nombre de producto a modificar: ")
+    productoCarrito= buscarProducto(cod,carrito)
+    producto = buscarProducto(cod,productos)
+    op = checkOption(input("¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:"),3,"¿Que desea modificar del producto?\n1)Agregar cantidad\n2)Reducir cantidad\n3)Eliminar de carrito\n:")
+    if op == 1:
+        cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
+        if cantidad <= producto.getStock():
+            producto.setStock(producto.getStock()-cantidad)
+            productoCarrito.setStock(productoCarrito.getStock()+cantidad)
+            productoCarrito.setSubtotal(productoCarrito.getSubtotal()+cantidad*productoCarrito.getPrecio())
+            return False
+    elif op == 2:
+        cantidad = checkNum(input(f"¿En cuanto desea reducir la cantidad?\nCantidad actual: {productoCarrito.getStock()}\n:"))
+        if cantidad <= productoCarrito.getStock():
+            producto.setStock(producto.getStock()+cantidad)
+            productoCarrito.setStock(productoCarrito.getStock()-cantidad)
+            productoCarrito.setSubtotal(productoCarrito.getSubtotal()-cantidad*productoCarrito.getPrecio())
+            return False
+    elif op == 3:
+        producto.setStock(productoCarrito.getStock()+producto.getStock())
+        carrito.remove(buscarProducto(cod,carrito))
+        return True
+    
 
 
 

@@ -37,6 +37,18 @@ class Producto():
     def getCaracteristicas(self):
         return self.caracteristicas
     
+class ProductoCarrito(Producto):
+    def __init__(self,codigo,nombre,marca,precio,stock,color,caracteristicas):
+        super().__init__(codigo,nombre,marca,precio,stock,color,caracteristicas)  # Llamada al constructor de la superclase
+        self.subtotal = self.precio*self.stock
+    
+    def getSubtotal(self):
+        return self.subtotal
+    
+    def setSubtotal(self,subtotal):
+        self.subtotal = subtotal
+
+    
 producto1 = Producto(1,"IPHONE X","APPLE",1000,23,"Rojo","Cámara 20MP, 8GB RAM, IOS 15")
 producto2 = Producto(2,"MACBOOK AIR","APPLE",3000,10,"Gris claro","Apple M1 8GB de RAM 256GB SSD, Apple M1 8-Core GPU 60 Hz 2560x1600px")
 producto3 = Producto(3,"VISION PRO","APPLE",4000,15,"Gris","Full vision 360°")
@@ -44,64 +56,30 @@ producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Cámara 200MP, 12gb
 
 carrito = []
 op = 0
-
+menu1 = True
+menu2 = False
+menu3 = False
+menu6 = False
+detallado = False
 """ os.system("cls") """
 while True:
+
+    op = 0
+
     productos = [producto1,producto2,producto3,producto4]
 
-    mensajeProductosBreve = productosBreve(productos, 0, True)
-
-    mensajeProductosDetallado = productosDetallado(productos, 0, True)
-
-    mensajeCarritoBreve = productosBreve(carrito,0,True)
-
-    """ mensajeCarritoDetallado = productosDetallado(carrito,0,True) """
-
-    menu2 = False
-    
-
-    menu = f"""
-Bienvenido a la tienda!!!!
-
-Estos son nuestros productos disponibles actualmente:
-
-{mensajeProductosBreve}
-Todos los precios están expresados en dólares
-
-¿Que desea realizar? Ingrese una opción:
-
-1) Buscar producto
-2) Añadir a carrito
-3) Salir
-"""
-    if len(carrito)>0:
-        menu = f"""
-Bienvenido a la tienda!!!!
-
-Estos son nuestros productos disponibles actualmente:
-
-{mensajeProductosBreve}
-
-Todos los precios están expresados en dólares
-
-Su carrito:
-
-{mensajeCarritoBreve}
-
-¿Que desea realizar? Ingrese una opción:
-
-1) Buscar producto
-2) Añadir a carrito
-3) Información detallada de productos
-4) Modificar compra
-5) Finalizar compra
-6) Salir
-"""
-        menu2 = True
+    if menu1:
+        menu = tipoMenu(1,productos)
 
     flag = False
-    if menu2 == False:
-        opcion = checkOption(input(menu+":"),3,menu)
+    
+        
+    if menu3:
+        menu = tipoMenu(3,productos,carrito)
+
+
+    if menu1:
+        opcion = checkOption(input(menu+":"),4,menu)
     else:
         opcion = checkOption(input(menu+":"),6,menu)
 
@@ -115,17 +93,19 @@ Su carrito:
 
                 if productoBuscado != False:
 
-                    mensajeCarrito ="¿Desea añadirlo al carrito? \n1) Si \n2) No"
+                    mensajeCarrito ="¿Desea añadirlo al carrito? \n1)Si \n2)No"
 
                     print(f"\nProducto encontrado!!!\n{productosDetallado(productos,productoBuscado, False)}\n{mensajeCarrito}")
 
                     op=checkOption(input(":"),2,mensajeCarrito)
 
                     if op == 1:
-                        añadirACarrito(productoBuscado,Producto,carrito)
-
-                else:
-                    print("Producto no encontrado")
+                        añadido = añadirACarrito(productoBuscado,Producto, ProductoCarrito,carrito)
+                        if añadido:
+                            menu1 = False
+                            menu2 = False
+                            menu3 = True
+                            menu6 = False
 
                 flag = volverAMenu()
                 if flag == True:
@@ -134,21 +114,86 @@ Su carrito:
 
         while True:
 
-            carrito = añadirACarrito(buscarProducto(input("Ingrese código de producto a agregar: "),productos), Producto, carrito)
-            continuar = input("Ingrese ENTER para continuar")
+            añadido = añadirACarrito(buscarProducto(input("Ingrese código de producto a agregar: "),productos), Producto, ProductoCarrito, carrito)
+            carritoDef = True
+            if añadido:
+                menu1 = False
+                menu2 = False
+                menu3 = True
+                menu6 = False
             flag = volverAMenu()
             if flag == True:        
                 break
-    
-    if opcion == 3 and menu2==False:
-        break
+  
+    if opcion == 3:
 
-    if opcion == 3 and menu2==True:
-        menu = f"""
-        ¿A que información desea acceder?
+        if menu1:
+            menu = tipoMenu(2,productos,carrito)
+            menu1 = False
+            menu2 = True
 
-        1) Productos en tienda
+        elif menu2:
+            menu = tipoMenu(1,productos,carrito)
+            menu2 = False
+            menu1 = True
+        
+        elif menu6:
+            menu = tipoMenu(3, productos, carrito)
+            menu6 = False
 
-        2) Productos en carrito
-        """
-        opcion = checkOption(input(menu+":"),3,menu)
+
+        else:
+            menu = f"""
+¿A que información desea acceder?
+
+1) Productos en tienda
+2) Productos en carrito
+3) Ambos
+"""
+            opcion = checkOption(input(menu+":"),3,menu)
+
+            if opcion == 1:
+                menu = tipoMenu(4,productos,carrito)
+                menu3 = False
+            elif opcion == 2:
+                menu = tipoMenu(5, productos, carrito)
+                menu3 = False
+            elif opcion == 3:
+                menu = tipoMenu(6, productos, carrito)
+                menu3 = False
+                menu6 = True
+    if menu1:
+        if opcion == 4:
+            break
+    else:
+        if opcion == 4:
+            print(productosBreve(carrito,0,True,True))
+            modificarProducto(carrito,productos)
+            if len(carrito)==0:
+                menu1 = True
+                menu2 = False
+                menu3 = False
+                menu6 = False
+        if opcion == 5:
+            print(productosDetallado(carrito,0,True,True))
+
+            op = checkOption(input("¿Con que desea pagar?\n1)Efectivo\n2)Tarjeta de crédito\n3)Tarjeta de débito\n:"),3,"¿Con que desea pagar?\n1)Efectivo\n2)Tarjeta de crédito\n3)Tarjeta de débito\n:")
+            
+            if op == 1:
+                print("Gracias por comprar!!! La dirección para recibir sus productos y pagar es la siguiente: Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
+                break
+            elif op == 2:
+                cuotas = checkOption(input("¿En cuantas cuotas desea pagar?\n1) 12 cuotas sin interés\n2) 6 cuotas sin interés\n3) 3 cuotas sin interés\n4) 1 cuota sin interés\n:"),4,"¿En cuantas cuotas desea pagar?\n1) 12 cuotas sin interés\n2) 6 cuotas sin interés\n3) 3 cuotas sin interés\n4) 1 cuota sin interés\n:")
+                tarjeta = input("Introduzca número de la tarjeta de crédito: ")
+                print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
+                break
+            elif op == 3:
+                tarjeta = input("Introduzca número de la tarjeta de débito: ")
+                print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
+                break
+
+        if opcion == 6:
+            break
+
+
+        
