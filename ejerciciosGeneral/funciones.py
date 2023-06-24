@@ -65,17 +65,30 @@ def listarProductos(productos,carritoFlag=False):
     return productosListados
 
 def buscarProducto(codigo,listaProductos):
+    cont = 0
 
     if codigo.isnumeric():
         codigo = int(codigo)
     else:
         codigo = codigo.lower()
+        palabraBuscada = list(codigo)
+    
 
     for i in range(len(listaProductos)):
-        
+        palabraEncontrada =  list(listaProductos[i].getNombre().lower())
+
         if codigo == listaProductos[i].getCodigo() or codigo == (listaProductos[i].getNombre()).lower():
             productoEncontrado = listaProductos[i]
             return productoEncontrado
+        
+        for k in range(len(palabraBuscada)):
+            if palabraBuscada[k]==palabraEncontrada[k]:
+                cont += 1
+
+        if cont > 2:
+            productoEncontrado = listaProductos[i]
+            return productoEncontrado
+
     print("Producto no encontrado")
     return False
         
@@ -167,8 +180,15 @@ def productosBreve(productos=[],producto="",todos=True,carritoFlag=False):
 
             tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
 
-            tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, producto.getSubtotal(), longitud[7]+5)
-                
+            
+            if producto.getStock()>0:
+                tabla = tabla + "\n" + "|{:^{}}|{:^{}}|{:^{}}|{:^{}}|{:^{}}|".format(producto.getCodigo(),longitud[6]+8,producto.getNombre(), longitud[0]+4, "$" + str(producto.getPrecio()), longitud[1]+4, producto.getStock(), longitud[4]+8, "$"+str(producto.getSubtotal()), longitud[7]+5)
+                total = total + producto.getSubtotal()
+        
+            tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
+
+            tabla =  tabla + "\n" + "|  {:<{}}|".format(f"Total: ${total}",totalGuion-2)
+
             tabla = tabla + "\n" + "+" + "-"*totalGuion + "+"
 
     else:
@@ -322,7 +342,7 @@ def tipoMenu(op,productos,carrito=[]):
     menu = ""
     if op == 1:
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 
@@ -340,7 +360,7 @@ Todos los precios están expresados en dólares
     elif op == 2:
 
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 
@@ -358,7 +378,7 @@ Todos los precios están expresados en dólares
         
     elif op == 3:
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 
@@ -381,7 +401,7 @@ Su carrito:
 """
     elif op == 4:
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 
@@ -404,7 +424,7 @@ Su carrito:
 """
     elif op == 5:
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 
@@ -428,7 +448,7 @@ Su carrito:
         
     elif op == 6:
         menu = f"""
-Bienvenido a la tienda!!!!
+Bienvenido a la tienda TecnoBlade!!!!
 
 Estos son nuestros productos disponibles actualmente:
 

@@ -53,6 +53,12 @@ producto1 = Producto(1,"IPHONE X","APPLE",1000,23,"Rojo","Cámara 20MP, 8GB RAM,
 producto2 = Producto(2,"MACBOOK AIR","APPLE",3000,10,"Gris claro","Apple M1 8GB de RAM 256GB SSD, Apple M1 8-Core GPU 60 Hz 2560x1600px")
 producto3 = Producto(3,"VISION PRO","APPLE",4000,15,"Gris","Full vision 360°")
 producto4 = Producto(4,"S23 ULTRA","SAMSUNG",800,10,"Negro","Cámara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
+producto5 = Producto(5,"APPLE WATCH","APPLE",400,33,"Rojo","GPS - Caja de aluminio medianoche 45 mm - Correa deportiva medianoche")
+producto6 = Producto(6,"MONITOR GAMER","SAMSUNG",300,7,"Negro","Pantalla led de 22, resolución de 1920px-1080px")
+producto7 = Producto(7,"AIR PODS","APPLE",200,55,"Blanco","Cámara 200MP, 12gb RAM, Snapdragon 8 Gen 2")
+
+
+compras = []
 
 carrito = []
 op = 0
@@ -66,7 +72,7 @@ while True:
 
     op = 0
 
-    productos = [producto1,producto2,producto3,producto4]
+    productos = [producto1,producto2,producto3,producto4,producto5,producto6,producto7]
 
     if menu1:
         menu = tipoMenu(1,productos)
@@ -169,6 +175,10 @@ while True:
         if opcion == 4:
             print(productosBreve(carrito,0,True,True))
             modificarProducto(carrito,productos)
+            menu1 = False
+            menu2 = False
+            menu3 = True
+            menu6 = False
             if len(carrito)==0:
                 menu1 = True
                 menu2 = False
@@ -177,20 +187,41 @@ while True:
         if opcion == 5:
             print(productosDetallado(carrito,0,True,True))
 
-            op = checkOption(input("¿Con que desea pagar?\n1)Efectivo\n2)Tarjeta de crédito\n3)Tarjeta de débito\n:"),3,"¿Con que desea pagar?\n1)Efectivo\n2)Tarjeta de crédito\n3)Tarjeta de débito\n:")
+            op = checkOption(input("¿Con que desea pagar?\n1) Efectivo\n2) Tarjeta de crédito\n3) Tarjeta de débito\n:"),3,"¿Con que desea pagar?\n1) Efectivo\n2) Tarjeta de crédito\n3) Tarjeta de débito\n:")
             
             if op == 1:
+
                 print("Gracias por comprar!!! La dirección para recibir sus productos y pagar es la siguiente: Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
-                break
+                carrito.clear()
+                volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                menu1 = True
+                menu2 = False
+                menu3 = False
+                menu6 = False
+
             elif op == 2:
                 cuotas = checkOption(input("¿En cuantas cuotas desea pagar?\n1) 12 cuotas sin interés\n2) 6 cuotas sin interés\n3) 3 cuotas sin interés\n4) 1 cuota sin interés\n:"),4,"¿En cuantas cuotas desea pagar?\n1) 12 cuotas sin interés\n2) 6 cuotas sin interés\n3) 3 cuotas sin interés\n4) 1 cuota sin interés\n:")
                 tarjeta = input("Introduzca número de la tarjeta de crédito: ")
                 print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
-                break
+                carrito.clear()
+                volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                menu1 = True
+                menu2 = False
+                menu3 = False
+                menu6 = False
+                
             elif op == 3:
+
                 tarjeta = input("Introduzca número de la tarjeta de débito: ")
                 print("Transacción realizada con éxito! \nGracias por comprar, puede retirar su producto en: Villa Carlos Paz, Av. Cárcano 1290, Tienda de tecnología TecnoBlade")
-                break
+                carrito.clear()
+                volver = checkOption(input("\n¿Desea seguir comprando?\n1) Si\n2) No\n:"),2,"\n¿Desea seguir comprando?\n1) Si\n2) No\n:")
+                menu1 = True
+                menu2 = False
+                menu3 = False
+                menu6 = False
+                
+
 
         if opcion == 6:
             break
