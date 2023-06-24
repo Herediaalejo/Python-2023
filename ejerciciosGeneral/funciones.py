@@ -65,7 +65,6 @@ def listarProductos(productos,carritoFlag=False):
     return productosListados
 
 def buscarProducto(codigo,listaProductos):
-    cont = 0
     palabraBuscada = ""
     palabraEncontrada = ""
     if codigo.isnumeric():
@@ -74,15 +73,22 @@ def buscarProducto(codigo,listaProductos):
         codigo = codigo.lower()
         palabraBuscada = list(codigo)
     
+    
+    
 
     for i in range(len(listaProductos)):
+        
+        K = 0
+        cont = 0
         palabraEncontrada =  list(listaProductos[i].getNombre().lower())
+
+        lenMenor = min(len(palabraBuscada),len(palabraEncontrada))
 
         if codigo == listaProductos[i].getCodigo() or codigo == (listaProductos[i].getNombre()).lower():
             productoEncontrado = listaProductos[i]
             return productoEncontrado
         
-        for k in range(len(palabraBuscada)):
+        for k in range(lenMenor):
             if palabraBuscada[k]==palabraEncontrada[k]:
                 cont += 1
 
@@ -97,6 +103,14 @@ def añadirACarrito(producto, clase, subclase, carrito):
 
     if isinstance(producto, clase):
         cantidad = checkNum(input(f"¿Que cantidad desea añadir?\nDisponibles: {producto.getStock()}\n:"))
+
+        for i in range(len(carrito)):
+            if producto.getNombre()==carrito[i].getNombre():
+                producto.setStock(producto.getStock()-cantidad)
+                carrito[i].setStock(carrito[i].getStock()+cantidad)
+                carrito[i].setSubtotal(carrito[i].getSubtotal()+cantidad*carrito[i].getPrecio())
+                print("\nProducto agregado al carrito!")
+                return True
 
         if cantidad <= producto.getStock() and cantidad>0:
             productoCarrito = subclase(producto.getCodigo(),producto.getNombre(),producto.getMarca(),producto.getPrecio(),cantidad,producto.getColor(),producto.getCaracteristicas())
