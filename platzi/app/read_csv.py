@@ -11,8 +11,9 @@ def read_csv(path):
             country_dict = {key: value for key, value in iterable} # Creo un diccionario con clave (el header) y valor(el valor en esa columna)
             data.append(country_dict) #Agrego cada diccionario a una lista
         return data # Devuelvo la lista de diccionarios
-            
-
+    
 if __name__ == "__main__":
     data = read_csv("./app/data.csv") # Ejecuto mi función y lo guardo en la variable data
-    print(data[0]) # Imprimo el primer diccionario obtenido del csv
+    print(data) # Imprimo el primer diccionario obtenido del csv
+
+ 
