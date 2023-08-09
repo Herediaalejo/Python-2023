@@ -5,10 +5,10 @@ import os
 suma = lambda a,b : a + b
 resta = lambda a,b : a - b
 multip = lambda a,b : a * b
-div = lambda a,b : a / b
+div = lambda a,b : a / b 
 potencia = lambda a,b : a ** b
 raizCuad = lambda a : a ** 1/2
-raizCub = lambda a : a ** 1/3
+raizCub = lambda a : a ** (1. / 3.)
 
 
 def validNum(value):
@@ -41,13 +41,16 @@ def calculate(op):
                 result = value
                 flag = True
             else:
-                value2 = validNum(input("Ingrese siguiente valor: "))
-                os.system("cls")
-                print("Ingrese 'x' para volver atras o 'z' para salir ")
-                if value2 != "z" and value2 != "x":
-                    result = getResult(result, value2, op)
-                elif value2 == "x" or value2 == "z":
-                    break
+                try:
+                    value2 = validNum(input("Ingrese siguiente valor: "))   
+                    os.system("cls")
+                    print("Ingrese 'x' para volver atras o 'z' para salir ")
+                    if value2 != "z" and value2 != "x":
+                        result = getResult(result, value2, op)
+                    elif value2 == "x" or value2 == "z":
+                        break
+                except Exception as error:
+                    print(error)
         return value2
     else:
         value = validNum(input("Ingrese valor a operar: "))
