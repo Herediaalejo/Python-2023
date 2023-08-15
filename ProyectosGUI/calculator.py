@@ -1,0 +1,55 @@
+from tkinter import *
+
+window = Tk()
+window.title("Calculator")
+
+num_input = Text(window, state="disabled", width=35, height=3, background="black", foreground="white", font=("Helvetica",15))
+num_input.grid(row=0,column=0,columnspan=4, padx=5, pady=5)
+
+button1 = Button(window, bg="gray", fg="white",text="1", width=6, height=2, font=("Segoe UI",15))
+button2 = Button(window, bg="gray", fg="white",text="2", width=6, height=2, font=("Segoe UI",15))
+button3 = Button(window, bg="gray", fg="white",text="3", width=6, height=2, font=("Segoe UI",15))
+button4 = Button(window, bg="gray", fg="white",text="4", width=6, height=2, font=("Segoe UI",15))
+button5 = Button(window, bg="gray", fg="white",text="5", width=6, height=2, font=("Segoe UI",15))
+button6 = Button(window, bg="gray", fg="white",text="6", width=6, height=2, font=("Segoe UI",15))
+button7 = Button(window, bg="gray", fg="white",text="7", width=6, height=2, font=("Segoe UI",15))
+button8 = Button(window, bg="gray", fg="white",text="8", width=6, height=2, font=("Segoe UI",15))
+button9 = Button(window, bg="gray", fg="white",text="9", width=6, height=2, font=("Segoe UI",15))
+button0 = Button(window, bg="gray", fg="white",text="0", width=6, height=2, font=("Segoe UI",15))
+
+buttonAC = Button(window, bg="gray", fg="white",text="AC", width=6, height=2, font=("Segoe UI",15))
+buttonPar1 = Button(window, bg="gray", fg="white",text="(", width=6, height=2, font=("Segoe UI",15))
+buttonPar2 = Button(window, bg="gray", fg="white",text=")", width=6, height=2, font=("Segoe UI",15))
+
+buttonDiv = Button(window, bg="gray", fg="white",text="÷", width=6, height=2, font=("Segoe UI",15))
+buttonMult = Button(window, bg="gray", fg="white",text="x", width=6, height=2, font=("Segoe UI",15))
+buttonRest = Button(window, bg="gray", fg="white",text="-", width=6, height=2, font=("Segoe UI",15))
+buttonSum = Button(window, bg="gray", fg="white",text="+", width=6, height=2, font=("Segoe UI",15))
+buttonDec = Button(window, bg="gray", fg="white",text=".", width=6, height=2, font=("Segoe UI",15))
+buttonDel = Button(window, bg="gray", fg="white",text="⌫", width=6, height=2, font=("Segoe UI",15))
+buttonEq = Button(window, bg="gray", fg="white",text="=", width=6, height=2, font=("Segoe UI",15))
+
+
+buttonAC.grid(row=1,column=0, padx=1, pady=5)
+buttonPar1.grid(row=1,column=1, padx=1, pady=5)
+buttonPar2.grid(row=1,column=2, padx=1, pady=5)
+buttonDiv.grid(row=1,column=3, padx=1, pady=5)
+button7.grid(row=2,column=0, padx=1, pady=5)
+button8.grid(row=2,column=1, padx=1, pady=5)
+button9.grid(row=2,column=2, padx=1, pady=5)
+buttonMult.grid(row=2,column=3, padx=1, pady=5)
+button4.grid(row=3,column=0, padx=1, pady=5)
+button5.grid(row=3,column=1, padx=1, pady=5)
+button6.grid(row=3,column=2, padx=1, pady=5)
+buttonRest.grid(row=3,column=3, padx=1, pady=5)
+button1.grid(row=4,column=0, padx=1, pady=5)
+button2.grid(row=4,column=1, padx=1, pady=5)
+button3.grid(row=4,column=2, padx=1, pady=5)
+buttonSum.grid(row=4,column=3, padx=1, pady=5)
+button0.grid(row=5,column=0, padx=1, pady=5)
+buttonDec.grid(row=5,column=1, padx=1, pady=5)
+buttonDel.grid(row=5,column=2, padx=1, pady=5)
+buttonEq.grid(row=5,column=3, padx=1, pady=5)
+
+
+window.mainloop()
