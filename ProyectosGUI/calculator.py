@@ -1,7 +1,7 @@
 from tkinter import *
 
 window = Tk()
-window.title("Calculator")
+window.title("Calculator MathMag")
 window.configure(bg="#1d1f1e")
 window.resizable(0,0)
 
@@ -20,21 +20,16 @@ def get_result(input_camp, result):
     input_camp.delete(0,END)
     input_camp.insert(0,result)
 
-
-
-
-
-
 num_input = Entry(window, cursor="arrow", width=32, background="#565c58", foreground="white", font=("Helvetica",18), justify="right")
-num_input.grid(row=0,column=0,columnspan=4, padx=5, pady=15, ipady=50)
+num_input.grid(row=0,column=0,columnspan=4, padx=5, pady=10, ipady=30)
 
 button_color = "#555956"
 button1 = Button(window, bg=button_color, cursor="hand2", fg="white",text="1", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "1"))
 button2 = Button(window, bg=button_color, cursor="hand2", fg="white",text="2", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "2"))
-button4 = Button(window, bg=button_color, cursor="hand2", fg="white",text="4", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "3"))
-button5 = Button(window, bg=button_color, cursor="hand2", fg="white",text="5", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "4"))
-button6 = Button(window, bg=button_color, cursor="hand2", fg="white",text="6", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "5"))
-button3 = Button(window, bg=button_color, cursor="hand2", fg="white",text="3", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "6"))
+button3 = Button(window, bg=button_color, cursor="hand2", fg="white",text="3", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "3"))
+button4 = Button(window, bg=button_color, cursor="hand2", fg="white",text="4", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "4"))
+button5 = Button(window, bg=button_color, cursor="hand2", fg="white",text="5", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "5"))
+button6 = Button(window, bg=button_color, cursor="hand2", fg="white",text="6", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "6"))
 button7 = Button(window, bg=button_color, cursor="hand2", fg="white",text="7", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "7"))
 button8 = Button(window, bg=button_color, cursor="hand2", fg="white",text="8", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "8"))
 button9 = Button(window, bg=button_color, cursor="hand2", fg="white",text="9", width=6, height=2, font=("Segoe UI",15), command= lambda : num_input.insert(END, "9"))
