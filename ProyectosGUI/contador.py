@@ -6,7 +6,7 @@ class Program():
     def __init__(self) -> None:
         self.window = Tk()
         self.window.geometry("430x100")
-        self.window.title("ContCreciente")
+        self.window.title("Contador")
         self.window.resizable(0,0)
         self.createWidgets()
         self.window.mainloop()
