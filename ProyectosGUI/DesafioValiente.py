@@ -123,7 +123,7 @@ class Aplicacion():
         self.eq_lab=ttk.Label(self.window, text="=")
         self.eq_lab.grid(row=0,column=2, sticky=E, padx=(0,5))
 
-        self.num_new_but=ttk.Button(self.window,text="Nuevo juego", state=DISABLED,command=lambda:[self.random_signAbut(),self.calculate(self.difficult.get(), self.calculo.get()), self.resultado_inp.focus(), self.resultado_inp.delete(0,END), self.resultado_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo número"), self.resultado_inp.config(state=NORMAL)])
+        self.num_new_but=ttk.Button(self.window, cursor="hand2",text="Nuevo juego", state=DISABLED,command=lambda:[self.random_signAbut(),self.calculate(self.difficult.get(), self.calculo.get()), self.resultado_inp.focus(), self.resultado_inp.delete(0,END), self.resultado_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo número"), self.resultado_inp.config(state=NORMAL)])
 
         self.num_new_but.grid(row=6,column=3, ipadx=10)
 
@@ -143,15 +143,15 @@ class Aplicacion():
 
         self.rbutton_div.grid(row=5,column=0,sticky=NW, padx=(40,0))
 
-        self.rbutton_easy = ttk.Radiobutton(self.window, value=1, text ="Facil", variable=self.difficult, command=lambda :[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0)])
+        self.rbutton_easy = ttk.Radiobutton(self.window, value=1, cursor="hand2", text ="Facil", variable=self.difficult, command=lambda :[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0)])
 
         self.rbutton_easy.grid(row=7,column=2, pady=(20,0), sticky=E)
 
-        self.rbutton_medium = ttk.Radiobutton(self.window, text ="Medio", value=2, variable=self.difficult, command=lambda:[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0) ])
+        self.rbutton_medium = ttk.Radiobutton(self.window, cursor="hand2", text ="Medio", value=2, variable=self.difficult, command=lambda:[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0) ])
         
         self.rbutton_medium.grid(row=7,column=3, pady=(20,0))
 
-        self.rbutton_hard = ttk.Radiobutton(self.window, text ="Dificil", value=3, variable=self.difficult, command=lambda:[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0) ])
+        self.rbutton_hard = ttk.Radiobutton(self.window, cursor="hand2", text ="Dificil", value=3, variable=self.difficult, command=lambda:[self.games_lab.config(text="Juegos :      "),self.wins_lab.config(text="Ganados :   "),self.loses_lab.config(text="Perdidos :   "), self.num_new_but.config(state=NORMAL), self.num_new_but.config(text="Nuevo juego"), self.clear_all(), self.num_new_but.focus(), self.clear_gwl(), self.resultado_but.config(state=DISABLED), self.resultado_inp.config(state=DISABLED), self.calculo.set(0) ])
         
         self.rbutton_hard.grid(row=7,column=4, pady=(20,0))
         self.resultado_inp = ttk.Entry(self.window, state=DISABLED, font=(18), width=10)
@@ -159,7 +159,7 @@ class Aplicacion():
         self.games=[0]
         self.wins=[0]
         self.loses=[0]
-        self.resultado_but = ttk.Button(self.window, text="Resultado", state=DISABLED,command=lambda:[self.verify_result(), self.random_signAbut(),self.calculate(self.difficult.get(), self.calculo.get()), self.resultado_inp.focus(), self.resultado_inp.delete(0,END), self.resultado_but.config(state=NORMAL)])
+        self.resultado_but = ttk.Button(self.window, cursor="hand2", text="Resultado", state=DISABLED,command=lambda:[self.verify_result(), self.random_signAbut(),self.calculate(self.difficult.get(), self.calculo.get()), self.resultado_inp.focus(), self.resultado_inp.delete(0,END), self.resultado_but.config(state=NORMAL)])
         self.resultado_but.grid(row=1,column=3, pady=(10,0))
         self.games_lab = ttk.Label(self.window, text="Juegos :      ")
         self.games_lab.grid(row=2,column=3, sticky=W, pady=(20,0), padx=(20,0))

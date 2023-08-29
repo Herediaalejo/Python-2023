@@ -7,6 +7,7 @@ class Program():
         self.window = Tk()
         self.window.geometry("300x100")
         self.window.title("ContCreciente")
+        self.window.config(bg="#EDE25D")
         self.window.resizable(0,0)
         self.createWidgets()
         self.window.mainloop()
@@ -22,15 +23,19 @@ class Program():
         
 
     def createWidgets(self):
+        self.style = ttk.Style()
+        self.style.configure('TLabel', font=('Segoe UI', 12, "bold"), background="#EDE25D")
+        self.style.configure('TButton', font=('Segoe UI', 12, "bold"), background="#EDE25D")
+        self.style.configure('TEntry', background="#EDE25D")
         self.cont_lab = ttk.Label(self.window, text="Contador")
         self.cont_lab.grid(row=0, column=0, pady=30, padx=10)
 
-        self.num_inp = ttk.Entry(self.window)
+        self.num_inp = ttk.Entry(self.window, font=('Segoe UI', 12, "bold"), width=10)
         self.num_inp.insert(0, 18)
         self.num_inp.config(state="readonly")
         self.num_inp.grid(row=0, column=1,pady=30, padx=20)
 
-        self.add_button = ttk.Button(self.window,text="+", width=3)
+        self.add_button = ttk.Button(self.window, cursor="hand2",text="+", width=3)
         self.add_button.grid(row=0,column=3,pady=30)
         self.add_button.config(command=self.count_sum)
 
