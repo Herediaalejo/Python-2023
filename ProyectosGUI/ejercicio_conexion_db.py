@@ -79,14 +79,15 @@ conexion = mysql.connector.connect(
 host="localhost",
 user="root",
 password="",
-database="Almacen"
+database="Almacen",
+port=3306
 )
 
 # Función para cargar y mostrar información en el Treeview
 def cargar_datos():
-    tree.delete(*tree.get_children()) # Borrar datos existentes en el Treeview
+    tree.delete(*tree.get_children())  # Borrar datos existentes en el Treeview
     cursor = conexion.cursor()
-    cursor.execute("select P.Id_Producto, P.nombre, C.nombre as 'categoria', M.Marca, Pr.Precio, S.stock From Producto P inner join Categoria C on C.Id_Categoria = P.Id_Categoria inner join Marca M on M.Id_Marca = P.Id_Marca inner join Precio Pr on Pr.Id_Producto = P.Id_Producto inner join Stock S on S.Id_Producto = P.Id_Producto;")
+    cursor.execute("SELECT P.CodProducto, P.nombre, M.nombre, C.nombre, P.precio, P.stock FROM Producto P INNER JOIN Categoria C ON P.CodCategoria = C.CodCategoria INNER JOIN Marca M ON P.CodMarca = M.CodMarca;")
     for row in cursor.fetchall():
         row = list(row)
         if row[4] == int(row[4]):
@@ -95,9 +96,11 @@ def cargar_datos():
             row[4] = "$" + str(row[4])
         row = tuple(row)
         tree.insert("", "end", values=row)
+    # cerrar el cursor después de usarlo
+    cursor.close()
     
 def crear_ventana():
-    global name_inp,cat_inp,mar_inp,pri_inp,stock_inp,cursor
+    global name_inp,cat_inp,mar_inp,pri_inp,stock_inp,ventana
     ventana = tk.Toplevel(root)
     ventana.title("Agregar datos")
     name_lab = ttk.Label(ventana, text="Nombre").grid(row=0,column=0, pady=20, sticky="E", padx=(0,15))
@@ -123,81 +126,82 @@ def crear_ventana():
     style_button = ttk.Style()
     style_button.configure("add.TButton", font=("Helvetica", 10))
 
-    add2_button = ttk.Button(ventana, text="Agregar", style="add.TButton")
+    add2_button = ttk.Button(ventana, text="Agregar", style="add.TButton", command=lambda:agregar_datos())
     add2_button.grid(row=5,column=1, pady=(0,20))
     
-"""
-AUN NO FUNCIONA BIEN
+
 
 def agregar_datos():
-    global name_inp,cat_inp,mar_inp,pri_inp,stock_inp
-    nombre=name_inp.get()
-    categoria=cat_inp.get()
-    marca=mar_inp.get()
-    precio=pri_inp.get()
-    stock=stock_inp.get()
-    if nombre!="" and categoria!="" and marca!="" and precio!=""and stock!="":
+    global name_inp, cat_inp, mar_inp, pri_inp, stock_inp, ventana
+    cursor = conexion.cursor()
+    nombre = name_inp.get()
+    categoria = cat_inp.get()
+    marca = mar_inp.get()
+    precio = pri_inp.get()
+    stock = stock_inp.get()
+    
+    if nombre != "" and categoria != "" and marca != "" and precio != "" and stock != "":
         if precio.isnumeric() and stock.isnumeric():
-            cursor = conexion.cursor()
+            try:
+                sentencia_sql = [
+                    "INSERT INTO Producto(nombre, precio, stock) VALUES (%s, %s, %s);",
+                    "INSERT INTO Categoria(nombre) VALUES (%s);",
+                    "INSERT INTO Marca(nombre) VALUES (%s);"
+                ]
+    
+                # Ejecutar las consultas SQL con sus respectivos valores
+                for sentencia in sentencia_sql:
+                    if "Producto" in sentencia:
+                        cursor.execute(sentencia, (nombre, float(precio), int(stock)))
+                    elif "Categoria" in sentencia:
+                        cursor.execute(sentencia, (categoria,))
+                    elif "Marca" in sentencia:
+                        cursor.execute(sentencia, (marca,))
+                    else:
+                        cursor.execute(sentencia)
+                
+                conexion.commit()
+    
+                # Obtener los IDs después de la inserción
+                cursor.execute("SELECT CodProducto FROM Producto WHERE nombre = %s;", (nombre,))
+                CodProducto = cursor.fetchone()[0]
+    
+                cursor.execute("SELECT CodCategoria FROM Categoria WHERE nombre = %s;", (categoria,))
+                CodCategoria = cursor.fetchone()[0]
+    
+                cursor.execute("SELECT CodMarca FROM Marca WHERE nombre = %s;", (marca,))
+                CodMarca = cursor.fetchone()[0]
+    
+                # Definir las consultas SQL con marcadores de posición
+                sentencia_sql = [
+                    "UPDATE Producto SET CodCategoria=%s WHERE CodProducto=%s;",
+                    "UPDATE Producto SET CodMarca=%s WHERE CodProducto=%s;"
+                ]
+    
+                # Ejecutar las consultas SQL con marcadores de posición y valores correspondientes
+                for sentencia in sentencia_sql:
+                    if "CodCategoria" in sentencia:
+                        cursor.execute(sentencia, (CodCategoria, CodProducto))
+                    elif "CodMarca" in sentencia:
+                        cursor.execute(sentencia, (CodMarca, CodProducto))
 
-            # Definir los valores que se utilizarán en las consultas SQL
-            valores = (nombre, categoria, marca)
 
-            sentencia_sql = [
-                "INSERT INTO Producto(nombre) VALUES (%s);",
-                "INSERT INTO Categoria(nombre) VALUES (%s);",
-                "INSERT INTO Marca(marca) VALUES (%s);"
-            ]
+                conexion.commit()
+    
+                messagebox.showinfo("Éxito", "Datos agregados correctamente.")
 
-            # Ejecutar las consultas SQL con sus respectivos valores
-            for i, sentencia in enumerate(sentencia_sql):
-                if "nombre" in sentencia:
-                    cursor.execute(sentencia, (valores[0],))
-                elif "categoria" in sentencia:
-                    cursor.execute(sentencia, (valores[1],))
-                elif "marca" in sentencia:
-                    cursor.execute(sentencia, (valores[2],))
-                else:
-                    cursor.execute(sentencia)
-
-
-            cursor.execute("SELECT Id_Producto FROM Producto WHERE nombre = %s;", (nombre,))
-            id_producto = cursor.fetchone()[0]  # Obtener el ID del producto
-
-            cursor.execute("SELECT Id_Categoria FROM Categoria WHERE nombre = %s;", (categoria,))
-            id_categoria = cursor.fetchone()[0]  # Obtener el ID de la categoría
-
-            cursor.execute("SELECT Id_Marca FROM Marca WHERE marca = %s;", (marca,))
-            id_marca = cursor.fetchone()[0]  # Obtener el ID de la marca
-
-            # Definir las consultas SQL con marcadores de posición
-            sentencia_sql = [
-                "INSERT INTO Precio(precio, Id_Producto) VALUES (%s, %s);",
-                "INSERT INTO Stock(stock, Id_Producto) VALUES (%s, %s);",
-                "UPDATE Producto SET Id_Categoria=%s WHERE Id_Producto=%s;",
-                "UPDATE Producto SET Id_Marca=%s WHERE Id_Producto=%s;"
-            ]
-
-            # Ejecutar las consultas SQL con marcadores de posición y valores correspondientes
-            for sentencia in sentencia_sql:
-                if "Id_Categoria" in sentencia:
-                    cursor.execute(sentencia, (id_categoria, id_producto))
-                elif "Id_Marca" in sentencia:
-                    cursor.execute(sentencia, (id_marca, id_producto))
-                elif "Precio" in sentencia:
-                    cursor.execute(sentencia, (float(precio), id_producto))
-                elif "Stock" in sentencia:
-                    cursor.execute(sentencia, (int(stock), id_producto))
-
-            conexion.commit()
-
-            messagebox.showerror("Exito!", "Datos agregados correctamente.")
-
+                ventana.destroy()
+    
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+                
         else:
-            messagebox.showerror("Error", "Por favor, ingrese datos validos.")
+            messagebox.showerror("Error", "Por favor, ingrese datos válidos.")
     else:
         messagebox.showerror("Error", "Por favor, complete todos los campos.")
-"""
+    cursor.close()
+
+
 
 def eliminar_fila():
     cursor = conexion.cursor()
@@ -205,35 +209,20 @@ def eliminar_fila():
 
     if seleccion:
         # Obtener el ID de la fila seleccionada
-        id_seleccionado = tree.item(seleccion, "values")[0]
-
-        # Desactivar las restricciones de clave externa
-        cursor.execute("SET FOREIGN_KEY_CHECKS=0;")
-
-        # Eliminar los registros relacionados en las tablas "Precio" y "Stock"
-        sentencia_sql = [
-            "DELETE FROM Precio WHERE Id_Producto = %s;",
-            "DELETE FROM Stock WHERE Id_Producto = %s;",
-        ]
-        for sentencia in sentencia_sql:
-            cursor.execute(sentencia, (id_seleccionado,))
-            
-        conexion.commit()
-
-        # Reactivar las restricciones de clave externa
-        cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
+        codproducto = tree.item(seleccion, "values")[0]
 
         # Eliminar la fila de la tabla "Producto," "Categoria," y "Marca"
         sentencia_sql = [
-            "DELETE FROM Producto WHERE Id_Producto = %s;",
-            "DELETE FROM Categoria WHERE Id_Categoria = %s;",
-            "DELETE FROM Marca WHERE Id_Marca = %s;"
+            "DELETE FROM Producto WHERE CodProducto = %s;"
         ]
 
         for sentencia in sentencia_sql:
-            cursor.execute(sentencia, (id_seleccionado,))
+            if "Producto" in sentencia:
+                cursor.execute(sentencia, (codproducto,))
+
 
         conexion.commit()
+        cursor.close()
 
         # Eliminar la fila del TreeView
         tree.delete(seleccion)
@@ -263,14 +252,13 @@ f4 = tk.Frame(root, height=50,bg=root.cget("bg"))
 f4.grid(row=1,column=0, columnspan=3)
 
 # Crear Treeview para mostrar la información
-tree = ttk.Treeview(f2, columns=("ID", "Nombre", "Categoria", "Marca", "Precio", "Stock"))
+tree = ttk.Treeview(f2, columns=("ID", "Nombre", "Marca", "Categoria", "Precio", "Stock"))
 
 tree['show'] = 'headings'
 tree.heading("#1", text="ID")
 tree.heading("#2", text="Nombre")
-tree.heading("#3", text="Categoria")
-
-tree.heading("#4", text="Marca")
+tree.heading("#3", text="Marca")
+tree.heading("#4", text="Categoria")
 tree.heading("#5", text="Precio")
 tree.heading("#6", text="Stock")
 
