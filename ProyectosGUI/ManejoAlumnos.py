@@ -3,6 +3,51 @@ from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector
 
+"""
+SQL
+
+-- Crear la base de datos ESCUELA si aún no existe
+CREATE DATABASE IF NOT EXISTS ESCUELA;
+
+-- Usar la base de datos ESCUELA
+USE ESCUELA;
+
+-- Creación de la tabla Carreras
+CREATE TABLE Carreras (
+IDCARRERA INT PRIMARY KEY auto_increment ,
+NOMBRE VARCHAR(255) NOT NULL,
+DURACION INT
+);
+
+-- Creación de la tabla EstadoAlumno
+CREATE TABLE EstadoAlumno (
+IDESTADOALUMNO INT PRIMARY KEY auto_increment,
+NOMBRE VARCHAR(255) NOT NULL
+);
+
+-- Creación de la tabla Alumnos con relaciones a las tablas Carreras y EstadoAlumno
+CREATE TABLE Alumnos (
+IDALUMNO INT PRIMARY KEY auto_increment,
+NOMBRE VARCHAR(255) NOT NULL,
+APELLIDO VARCHAR(255) NOT NULL,
+DNI VARCHAR(20) NOT NULL,
+IDCARRERA INT NOT NULL,
+IDESTADOALUMNO INT NOT NULL,
+FOREIGN KEY (IDCARRERA) REFERENCES Carreras(IDCARRERA),
+FOREIGN KEY (IDESTADOALUMNO) REFERENCES EstadoAlumno(IDESTADOALUMNO)
+);
+
+-- Agregado de carreras de Software, Enfermería y Diseño
+INSERT INTO Carreras(nombre, duracion)
+VALUES ("Software"), ("Enfermería"), ("Diseño"); */
+
+-- Agregado de estados Regular, Promocional y Libre
+INSERT INTO EstadoAlumno (nombre)
+VALUES ("Regular"), ("Promocional"), ("Libre")*/
+
+-- Agregado de campo estadoai (Estado activo/inactivo) a la tabla de alumnos.
+ALTER TABLE ALUMNOS ADD estadoai bool not null;
+"""
 # Conexión a la base de datos MySQL
 conexion = mysql.connector.connect(host="localhost", user="root", password="", database="escuela")
 
