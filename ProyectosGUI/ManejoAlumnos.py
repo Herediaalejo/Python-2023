@@ -51,7 +51,7 @@ def cargar_carreras_estados():
     estados = cursor.fetchall()
     carrera_combobox['values'] = [row[1] for row in carreras]
     estado_combobox['values'] = [row[1] for row in estados]
-    return carreras, estados  # Devolver también la lista de carreras con sus IDs
+    return carreras, estados  # Devolver lista de carreras y estados con sus IDs
 
 def cargar_alumno():
     cursor = conexion.cursor()
