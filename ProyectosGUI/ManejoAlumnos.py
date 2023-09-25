@@ -4,7 +4,7 @@ from tkinter import messagebox
 import mysql.connector
 
 # Conexión a la base de datos MySQL
-conexion = mysql.connector.connect(host="localhost", user="root", password="", database="escuela")
+conexion = mysql.connector.connect(host="localhost", user="root", password="estudiantes2020", database="escuela")
 
 # Función para cargar y mostrar información en el Treeview
 def cargar_datos(op=0):
@@ -236,6 +236,43 @@ def verificar_filtro(event):
     else:
         limpiar_button.config(state="disabled")  # Deshabilita el botón si no hay elementos ni contenido
 
+
+# Función para crear una celda vacía con borde
+def crear_celda(ventana, row, column, width=100, height=30):
+    celda = tk.Frame(ventana, width=width,height=height,borderwidth=1, relief='solid')#
+    celda.grid(row=row, column=column, pady=(0,30))
+    return celda
+
+
+def agregar_carrera():
+    screenCarrera = tk.Toplevel(root)
+    screenCarrera.geometry("500x300")
+    formCarrera = tk.Frame(screenCarrera, bd=2, relief=tk.SOLID)
+    formCarrera.pack(pady=(50,0))
+    screenCarrera.title("Agregar Carrera")
+    tituloCarrera = ttk.Label(formCarrera, text="Formulario de Carrera")
+    tituloCarrera.grid(row=0, column=0, columnspan=2, pady=10)
+
+    estilo = ttk.Style()
+    estilo.configure('TEntry', font=('Arial', 8))
+
+    # Campos de entrada para nombre, apellido y DNI con el mismo ancho que el ComboBox
+    nombreCar_label = ttk.Label(formCarrera, text="Nombre:")
+    nombreCar_label.grid(row=1, column=0)
+
+    nombreCar_entry = ttk.Entry(formCarrera, style='TEntry')
+    nombreCar_entry.grid(row=1, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
+
+    duracion_label = ttk.Label(formCarrera, text="Duracion:")
+    duracion_label.grid(row=2, column=0)
+
+    duracion_entry = ttk.Entry(formCarrera, style='TEntry')
+    duracion_entry.grid(row=2, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
+
+    screenCarrera.mainloop()
+
+    pass
+
 # Crear ventana
 root = tk.Tk()
 root.title("Consulta de Alumnos")
@@ -301,12 +338,6 @@ tree.pack(padx=10, pady=10)
 
 tree.bind("<Button-1>", lambda event: tree.selection_remove(tree.selection()) if tree.selection() else None)
 
-# Función para crear una celda vacía con borde
-def crear_celda(ventana, row, column):
-    celda = tk.Frame(ventana, width=100,height=30)#,borderwidth=1, relief='solid'
-    celda.grid(row=row, column=column, pady=(0,30))
-    return celda
-
 footer = tk.Frame(root)
 footer.pack(fill="both", expand=True, padx=10)
 
@@ -365,7 +396,17 @@ dni_entry.bind("<KeyRelease>", verificar_contenido)
 carrera_combobox.bind("<<ComboboxSelected>>", lambda event: verificar_contenido(event))
 estado_combobox.bind("<<ComboboxSelected>>", lambda event: verificar_contenido(event))
 
+menu = tk.Menu(root)
 
+menuCarrera = tk.Menu(menu, tearoff=0)
+
+menu.add_cascade(label="Nuevo", menu=menuCarrera)
+
+
+
+menuCarrera.add_command(label="Nueva Carrera", command=agregar_carrera)
+
+root.config(menu=menu)
 
 # Ejecutar la aplicación
 root.mainloop()
