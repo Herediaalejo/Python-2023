@@ -4,7 +4,7 @@ from tkinter import messagebox
 import mysql.connector
 
 # Conexión a la base de datos MySQL
-conexion = mysql.connector.connect(host="localhost", user="root", password="estudiantes2020", database="escuela")
+conexion = mysql.connector.connect(host="localhost", user="root", password="", database="escuela")
 
 # Función para cargar y mostrar información en el Treeview
 def cargar_datos(op=0):
@@ -22,18 +22,22 @@ def cargar_datos(op=0):
     if op == 0:
         filtros_combobox.set("")
         filtrar_button.config(state="disabled")
-        cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO ORDER BY APELLIDO;")
+        cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE Alumnos.idestadoalumno = 1 AND ALUMNOS.ESTADOAI = True ORDER BY APELLIDO ;")
     elif op == 1:
 
         if es_estado:
             cursor.execute("SELECT IDESTADOALUMNO FROM ESTADOALUMNO WHERE ESTADOALUMNO.NOMBRE = %s", (filtro,))
             idfiltro = cursor.fetchall()[0][0]
-            cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE ALUMNOS.IDESTADOALUMNO = %s ORDER BY APELLIDO;", (idfiltro,))
+            cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE ALUMNOS.IDESTADOALUMNO = %s AND ALUMNOS.ESTADOAI = True ORDER BY APELLIDO;", (idfiltro,))
         
         elif es_carrera:
             cursor.execute("SELECT IDCARRERA FROM CARRERAS WHERE CARRERAS.NOMBRE = %s", (filtro,))
             idfiltro = cursor.fetchall()[0][0]
-            cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE ALUMNOS.IDCARRERA = %s ORDER BY APELLIDO;", (idfiltro,))
+            cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE ALUMNOS.IDCARRERA = %s AND ALUMNOS.ESTADOAI = True ORDER BY APELLIDO;", (idfiltro,))
+        
+        else:
+            cursor.execute("SELECT Alumnos.APELLIDO, Alumnos.NOMBRE, Alumnos.DNI, Carreras.NOMBRE, EstadoAlumno.nombre FROM Alumnos JOIN Carreras ON Alumnos.IDCARRERA = Carreras.IDCARRERA JOIN EstadoAlumno ON Alumnos.IDESTADOALUMNO = EstadoAlumno.IDESTADOALUMNO WHERE ALUMNOS.ESTADOAI = True ORDER BY APELLIDO;")
+
 
     else:
         return
@@ -42,7 +46,7 @@ def cargar_datos(op=0):
         tree.insert("", "end", values=row)
 
 
-# Función para obtener las carreras desde la base de datos y cargarlas en el ComboBox
+# Función para obtener las carreras y estados desde la base de datos y cargarlas en los ComboBox
 def cargar_carreras_estados():
     cursor = conexion.cursor()
     cursor.execute("SELECT IDCARRERA, NOMBRE FROM Carreras ORDER BY NOMBRE")
@@ -53,15 +57,24 @@ def cargar_carreras_estados():
     estado_combobox['values'] = [row[1] for row in estados]
     return carreras, estados  # Devolver lista de carreras y estados con sus IDs
 
+# Función para obtener los alumnos
 def cargar_alumno():
     cursor = conexion.cursor()
     cursor.execute("SELECT IDALUMNO, NOMBRE FROM ALUMNOS;")
-    alumnos = cursor.fetchall()  # Devolver también la lista de carreras con sus IDs
-    return alumnos
+    alumnos = cursor.fetchall()  
+    return alumnos # Devolver lista de alumnos con sus IDs
 
 # Función para mostrar una ventana de alerta
 def mostrar_alerta(mensaje):
     messagebox.showwarning("Alerta", mensaje)
+
+# Función para obtener los dni de todos los alumnos
+def cargar_dni():
+    cursor = conexion.cursor()
+    cursor.execute("SELECT DNI FROM ALUMNOS;")
+    all_dni = [valor[0] for valor in cursor.fetchall()]
+    return all_dni # Devolver lista de todos los dni
+
 
 # Función para guardar un nuevo registro de alumno
 def guardar_alumno():
@@ -70,32 +83,37 @@ def guardar_alumno():
     dni = validar_dni(dni_entry.get())
     carrera_nombre = carrera_combobox.get()
     estado_nombre = estado_combobox.get()
+    all_dni = cargar_dni()
 
     if nombre and apellido and dni and carrera_nombre:
-        # Obtener el ID de la carrera seleccionada
-        carreras, estados = cargar_carreras_estados()
-        carrera_id = None
-        for carrera in carreras:
-            if carrera[1] == carrera_nombre:
-                carrera_id = carrera[0]
-                break
-        for estado in estados:
-            if estado[1] == estado_nombre:
-                estado_id = estado[0]
-                break             
-        cursor = conexion.cursor()
-        # Insertar un nuevo registro en la tabla Alumnos con el ID de carrera y el valor predeterminado para IDESTADOALUMNO
-        cursor.execute("INSERT INTO Alumnos (NOMBRE, APELLIDO, DNI, IDCARRERA, IDESTADOALUMNO) VALUES (%s, %s, %s, %s, %s);", (nombre, apellido, dni, carrera_id, estado_id))
-        conexion.commit()
-        cargar_datos()  # Actualizar la vista
-        messagebox.showinfo("Exito!", "El alumno ha sido guardado con exito.")
-        # Limpiar los campos después de insertar
-        nombre_entry.delete(0, tk.END)
-        apellido_entry.delete(0, tk.END)
-        dni_entry.delete(0, tk.END)
-        carrera_combobox.set("")  # Limpiar la selección del ComboBox
-        estado_combobox.set("")  # Limpiar la selección del ComboBox
-        guardar_button.config(state="disabled")
+        if dni not in all_dni:
+            # Obtener el ID de la carrera y estado seleccionados
+            carreras, estados = cargar_carreras_estados()
+            carrera_id = None
+            for carrera in carreras:
+                if carrera[1] == carrera_nombre:
+                    carrera_id = carrera[0]
+                    break
+            for estado in estados:
+                if estado[1] == estado_nombre:
+                    estado_id = estado[0]
+                    break             
+            cursor = conexion.cursor()
+            # Insertar un nuevo registro en la tabla Alumnos con el ID de carrera y el valor predeterminado para IDESTADOALUMNO
+            cursor.execute("INSERT INTO Alumnos (NOMBRE, APELLIDO, DNI, IDCARRERA, IDESTADOALUMNO, ESTADOAI) VALUES (%s, %s, %s, %s, %s, %s);", (nombre, apellido, dni, carrera_id, estado_id, True))
+            conexion.commit()
+            cargar_datos()  # Actualizar la vista
+            messagebox.showinfo("Éxito!", "El alumno ha sido guardado con éxito.")
+            # Limpiar los campos después de insertar
+            nombre_entry.delete(0, tk.END)
+            apellido_entry.delete(0, tk.END)
+            dni_entry.delete(0, tk.END)
+            carrera_combobox.set("")  # Limpiar la selección del ComboBox
+            estado_combobox.set("Regular") 
+            estado_combobox.config(state="disabled") 
+            guardar_button.config(state="disabled")
+        else:
+            mostrar_alerta("El dni ya se encuentra registrado. Debe cambiarlo.")
 
     elif dni != False:
         mostrar_alerta("Los campos son obligatorios. Debe completarlos.")
@@ -154,6 +172,7 @@ def modificar_alumno():
         carrera_combobox.set(carrera_nombre)
         estado_combobox.set(estado_nombre)
         guardar_button.config(text="Modificar", command=actualizar_alumno)
+        estado_combobox.config(state="readonly")
         tree.selection_remove(tree.selection())
         modificar_button.config(state="disabled")
 
@@ -182,14 +201,15 @@ def actualizar_alumno():
         conexion.commit()
         cargar_datos()  # Actualizar la vista
         # Limpiar los campos después de insertar
-        messagebox.showinfo("Exito", "El alumno ha sido modificado con exito.")
+        messagebox.showinfo("Éxito", "El alumno ha sido modificado con éxito.")
         nombre_entry.delete(0, tk.END)
         apellido_entry.delete(0, tk.END)
         dni_entry.delete(0, tk.END)
         carrera_combobox.set("")  # Limpiar la selección del ComboBox
-        estado_combobox.set("")  # Limpiar la selección del ComboBox
         guardar_button.config(text="Guardar", command=guardar_alumno)
         guardar_button.config(state="disabled")
+        estado_combobox.set("Regular")
+        estado_combobox.config(state="disabled")
         
     elif dni != False:
         mostrar_alerta("Los campos son obligatorios. Debe completarlos.")
@@ -200,10 +220,10 @@ def eliminar_alumno():
     dni = tree.item(seleccion, "values")[2]
     respuesta = messagebox.askyesno("Confirmación", f"¿Seguro que deseas eliminar al alumno '{tree.item(seleccion, 'values')[0]} {tree.item(seleccion, 'values')[1]}'?")
     if respuesta:
-        cursor.execute("DELETE FROM ALUMNOS WHERE ALUMNOS.DNI=%s",(dni,))
+        cursor.execute("UPDATE ALUMNOS SET ESTADOAI = %s WHERE DNI = %s", (False, dni))
         conexion.commit()
         cargar_datos()
-        messagebox.showinfo("Exito!", "El alumno ha sido eliminado con exito.")
+        messagebox.showinfo("Éxito!", "El alumno ha sido eliminado con éxito.")
     else:
         return
     
@@ -212,7 +232,8 @@ def limpiar_pantalla():
     apellido_entry.delete(0, tk.END)
     dni_entry.delete(0, tk.END)
     carrera_combobox.set("") 
-    estado_combobox.set("")  
+    estado_combobox.set("Regular")
+    estado_combobox.config(state="disabled")    
     filtros_combobox.set("")
     tree.delete(*tree.get_children()) 
     guardar_button.config(text="Guardar", command=guardar_alumno)
@@ -239,12 +260,12 @@ def verificar_filtro(event):
 
 # Función para crear una celda vacía con borde
 def crear_celda(ventana, row, column, width=100, height=30):
-    celda = tk.Frame(ventana, width=width,height=height,borderwidth=1, relief='solid')#
+    celda = tk.Frame(ventana, width=width,height=height)#,borderwidth=1, relief='solid'
     celda.grid(row=row, column=column, pady=(0,30))
     return celda
 
 
-def agregar_carrera():
+"""def agregar_carrera():
     screenCarrera = tk.Toplevel(root)
     screenCarrera.geometry("500x300")
     formCarrera = tk.Frame(screenCarrera, bd=2, relief=tk.SOLID)
@@ -255,8 +276,6 @@ def agregar_carrera():
 
     estilo = ttk.Style()
     estilo.configure('TEntry', font=('Arial', 8))
-
-    # Campos de entrada para nombre, apellido y DNI con el mismo ancho que el ComboBox
     nombreCar_label = ttk.Label(formCarrera, text="Nombre:")
     nombreCar_label.grid(row=1, column=0)
 
@@ -271,7 +290,7 @@ def agregar_carrera():
 
     screenCarrera.mainloop()
 
-    pass
+    pass"""
 
 # Crear ventana
 root = tk.Tk()
@@ -310,11 +329,14 @@ carrera_combobox.grid(row=4, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky=
 
 estado_label = tk.Label(formulario_frame, text="Estado:")
 estado_label.grid(row=5, column=0)
-estado_combobox = ttk.Combobox(formulario_frame,  state="readonly")# Configurar el ComboBox como de solo lectura
+estado_combobox = ttk.Combobox(formulario_frame)
+estado_combobox.set("Regular")
 estado_combobox.grid(row=5, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
 
-# Cargar las carreras al inicio de la aplicación y obtener la lista de carreras con sus IDs
+# Cargar las carreras y estados al inicio de la aplicación y obtener la lista de carreras con sus IDs
 carreras = cargar_carreras_estados()
+
+estado_combobox.config(state="disabled")
 
 # Botón para guardar un nuevo registro de alumno
 guardar_button = ttk.Button(formulario_frame, text="Guardar", command=guardar_alumno)
@@ -351,7 +373,7 @@ modificar_button.grid(row=0, column=3)
 modificar_button.config(state="disabled")
 
 # Botón para cargar datos
-cargar_button = ttk.Button(footer, width=30,text="Cargar Alumnos (Todos)", command=cargar_datos)
+cargar_button = ttk.Button(footer, width=30,text="Cargar Alumnos (Regulares)", command=cargar_datos)
 cargar_button.grid(row=0, column=4, columnspan=2)
 
 filtros_lab = ttk.Label(footer,text="Filtros")
@@ -360,7 +382,7 @@ filtros_lab.grid(row=0, column=6, padx=(0,10), sticky="E")
 filtros_combobox = ttk.Combobox(footer, width=30,state="readonly")
 filtros_combobox.grid(row=0, column=7, columnspan=2)
 
-filtrar_button = ttk.Button(footer, text="Filtrar", command=lambda:cargar_datos(1))
+filtrar_button = ttk.Button(footer, text="Buscar", command=lambda:cargar_datos(1))
 filtrar_button.config(state="disabled")
 filtrar_button.grid(row=0,column=9)
 
@@ -383,10 +405,10 @@ cursor.execute("SELECT IDCARRERA, NOMBRE FROM Carreras ORDER BY NOMBRE")
 carreras = cursor.fetchall()
 
 # Crear una lista combinada de estados y carreras
-valores_combinados = [row[1] for row in estados] + [row[1] for row in carreras]
+valores_combinados = ["Todos"] + [row[1] for row in estados] + [row[1] for row in carreras]
 
 # Configurar los valores del Combobox
-filtros_combobox['values'] = valores_combinados
+filtros_combobox['values'] =  valores_combinados
 
 filtros_combobox.bind("<<ComboboxSelected>>", lambda event: (filtrar_button.config(state="normal"), verificar_filtro(event)))
 
@@ -396,17 +418,15 @@ dni_entry.bind("<KeyRelease>", verificar_contenido)
 carrera_combobox.bind("<<ComboboxSelected>>", lambda event: verificar_contenido(event))
 estado_combobox.bind("<<ComboboxSelected>>", lambda event: verificar_contenido(event))
 
-menu = tk.Menu(root)
+"""menu = tk.Menu(root)
 
 menuCarrera = tk.Menu(menu, tearoff=0)
 
 menu.add_cascade(label="Nuevo", menu=menuCarrera)
 
-
-
 menuCarrera.add_command(label="Nueva Carrera", command=agregar_carrera)
 
-root.config(menu=menu)
+root.config(menu=menu)"""
 
 # Ejecutar la aplicación
 root.mainloop()
