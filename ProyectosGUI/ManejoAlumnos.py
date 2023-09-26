@@ -163,24 +163,34 @@ def guardar_alumno():
     elif dni != False:
         mostrar_alerta("Los campos son obligatorios. Debe completarlos.")
 
-def validar_dni(dni):
-    if "." in dni:
-        dni = dni.replace(".", "")
-    if len(dni) == 8:
-        for caracter in dni:
-            if caracter.isalpha():
-                mostrar_alerta("El dni no puede contener letras.")
-                return False
-        return dni
-    else:
-        mostrar_alerta("El dni debe poseer 8 caracteres (sin contar puntos).")
-        return False
+def validar_dni(dni, op=0):
+    global dni_seleccionado
+    all_dni = cargar_dni()
+    if op == 1: #Opción valida cuando deseo modificar un alumno
+        if dni_seleccionado:
+            if dni == dni_seleccionado:
+                all_dni.remove(dni_seleccionado) 
 
+    if dni not in all_dni:
+        if "." in dni:
+            dni = dni.replace(".", "")
+        if len(dni) >= 7 and len(dni) <= 8:
+            for caracter in dni:
+                if caracter.isalpha():
+                    mostrar_alerta("El dni no puede contener letras.")
+                    return False
+            return dni
+        else:
+            mostrar_alerta("El dni debe poseer 7 u 8 dígitos (sin contar puntos).")
+            return False
+    else:
+        mostrar_alerta("El dni ya existe. Debe cambiarlo.")
+        return False
 
 alumno_id = None
 
 def modificar_alumno():
-    global alumno_id
+    global alumno_id, dni_seleccionado
     guardar_button.config(state="disabled")
     nombre_entry.delete(0, tk.END)
     apellido_entry.delete(0, tk.END)
@@ -193,6 +203,7 @@ def modificar_alumno():
         apellido = tree.item(seleccion, "values")[0]
         nombre = tree.item(seleccion, "values")[1]
         dni = tree.item(seleccion, "values")[2]
+        dni_seleccionado = dni
         carrera_nombre = tree.item(seleccion, "values")[3]
         estado_nombre = tree.item(seleccion, "values")[4]
         alumnos = cargar_alumno()
@@ -218,7 +229,6 @@ def modificar_alumno():
         estado_combobox.set(estado_nombre)
         guardar_button.config(text="Modificar", command=actualizar_alumno)
         estado_combobox.config(state="readonly")
-        tree.selection_remove(tree.selection())
         modificar_button.config(state="disabled")
 
 
@@ -226,7 +236,7 @@ def actualizar_alumno():
     global alumno_id
     nombre = nombre_entry.get().upper()
     apellido = apellido_entry.get().upper()
-    dni = validar_dni(dni_entry.get())
+    dni = validar_dni(dni_entry.get(), 1)
     carrera_nombre = carrera_combobox.get()
     estado_nombre = estado_combobox.get()
     # Obtener el ID de la carrera y el estado
@@ -305,7 +315,7 @@ def verificar_filtro(event):
 
 # Función para crear una celda vacía con borde
 def crear_celda(ventana, row, column, width=100, height=30):
-    celda = tk.Frame(ventana, width=width,height=height)#,borderwidth=1, relief='solid'
+    celda = tk.Frame(ventana, width=width,height=height, bg=bgcolor)#,borderwidth=1, relief='solid'
     celda.grid(row=row, column=column, pady=(0,30))
     return celda
 
@@ -342,37 +352,42 @@ root = tk.Tk()
 root.title("Consulta de Alumnos")
 root.resizable(0,0)
 
+bgcolor = "#BCFFCC"
+frcolor = "#ADDAFF"
+
+root.config(bg=bgcolor)
+
 # Crear un frame con un borde visible para el formulario de inscripción
-formulario_frame = tk.Frame(root, bd=2, relief=tk.SOLID)
+formulario_frame = tk.Frame(root, bd=1.5, relief=tk.SOLID, background=frcolor)
 formulario_frame.pack(padx=10, pady=10)
 
 # Título del formulario
-titulo_label = tk.Label(formulario_frame, text="Formulario Inscripción", font=("Helvetica", 14))
+titulo_label = tk.Label(formulario_frame, text="Formulario de Inscripción", font=("Helvetica", 14), background=frcolor)
 titulo_label.grid(row=0, column=0, columnspan=2, pady=10)
 
 # Campos de entrada para nombre, apellido y DNI con el mismo ancho que el ComboBox
-nombre_label = tk.Label(formulario_frame, text="Nombre:")
+nombre_label = tk.Label(formulario_frame, text="Nombre:", background=frcolor)
 nombre_label.grid(row=1, column=0)
-nombre_entry = tk.Entry(formulario_frame)
+nombre_entry = ttk.Entry(formulario_frame)
 nombre_entry.grid(row=1, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
 
-apellido_label = tk.Label(formulario_frame, text="Apellido:")
+apellido_label = tk.Label(formulario_frame, text="Apellido:", background=frcolor)
 apellido_label.grid(row=2, column=0)
-apellido_entry = tk.Entry(formulario_frame)
+apellido_entry = ttk.Entry(formulario_frame)
 apellido_entry.grid(row=2, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
 
-dni_label = tk.Label(formulario_frame, text="DNI:")
+dni_label = tk.Label(formulario_frame, text="DNI:", background=frcolor)
 dni_label.grid(row=3, column=0)
-dni_entry = tk.Entry(formulario_frame)
+dni_entry = ttk.Entry(formulario_frame)
 dni_entry.grid(row=3, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
 
 # Combo box para la carrera
-carrera_label = tk.Label(formulario_frame, text="Carrera:")
+carrera_label = tk.Label(formulario_frame, text="Carrera:", background=frcolor)
 carrera_label.grid(row=4, column=0)
 carrera_combobox = ttk.Combobox(formulario_frame,  state="readonly")# Configurar el ComboBox como de solo lectura
 carrera_combobox.grid(row=4, column=1, padx=5, pady=5, ipadx=5, ipady=5, sticky="ew")
 
-estado_label = tk.Label(formulario_frame, text="Estado:")
+estado_label = tk.Label(formulario_frame, text="Estado:", background=frcolor)
 estado_label.grid(row=5, column=0)
 estado_combobox = ttk.Combobox(formulario_frame)
 estado_combobox.set("Regular")
@@ -407,6 +422,7 @@ tree.bind("<Button-1>", lambda event: tree.selection_remove(tree.selection()) if
 
 footer = tk.Frame(root)
 footer.pack(fill="both", expand=True, padx=10)
+footer.config(bg=bgcolor)
 
 
 for column in range(10):
@@ -421,7 +437,7 @@ modificar_button.config(state="disabled")
 cargar_button = ttk.Button(footer, width=30,text="Cargar Alumnos (Regulares)", command=cargar_datos)
 cargar_button.grid(row=0, column=4, columnspan=2)
 
-filtros_lab = ttk.Label(footer,text="Filtros")
+filtros_lab = ttk.Label(footer,text="Filtros", background=bgcolor)
 filtros_lab.grid(row=0, column=6, padx=(0,10), sticky="E")
 
 filtros_combobox = ttk.Combobox(footer, width=30,state="readonly")
