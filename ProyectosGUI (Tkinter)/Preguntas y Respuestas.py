@@ -62,3 +62,26 @@ punt_tree = ttk.Treeview(root)
 punt_tree.grid(row=2, column=2, columnspan=2, rowspan=6)
 
 tk.mainloop()
+
+
+"""
+create database trivia;
+
+use trivia;
+
+create table Jugador(
+ID_JUGADOR int auto_increment primary key,
+NOMBRE VARCHAR(255) NOT NULL,
+INSTAGRAM varchar(255),
+TELEFONO varchar(255),
+PUNTAJE INT NOT NULL,
+TIEMPO DOUBLE NOT NULL
+);
+
+create table Preguntas(
+ID_PREGUNTA INT auto_increment primary key,
+PREGUNTA VARCHAR (255) NOT NULL,
+RESPUESTA VARCHAR (255) NOT NULL
+);
+
+"""
