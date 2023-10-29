@@ -5,6 +5,7 @@ from tkinter import messagebox
 from tkinter import font
 import mysql.connector
 import time
+import random
 from PIL import Image, ImageTk
 import random
 
