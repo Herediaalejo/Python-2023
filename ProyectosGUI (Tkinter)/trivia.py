@@ -61,6 +61,9 @@ def cargar_jugadores(tree):
     jugadores = []
     for jugador in datos:
         jugadores.append(list(jugador))
+
+    jugadores.sort(key=lambda jugador: (-jugador[2], jugador[1])) #Ordena los jugadores primero por puntaje poniendo el mas alto primero, luego por tiempo poniendo el mas bajo primero
+
     for i in range(len(jugadores)):
         jugadores[i][1] = sec_to_min(jugadores[i][1])
     for row in jugadores:
@@ -156,14 +159,19 @@ def eliminar_widgets(ventana):
 def empezar_juego():
     global nombre, telefono, instagram
     nombre = name_entry.get()
+    nombre = nombre.title()
     instagram = ig_entry.get()
     telefono = tel_entry.get()
+    if len(instagram) == 0:
+        instagram=None
+    if len(telefono) == 0:
+        telefono=None
     if nombre:
-        if len(nombre)>2:
+        if len(nombre)>=3 and len(nombre)<=20:
             #Verifico si alguno de los caracteres de nombre es un número
             nombre_valido = not any(c.isdigit() for c in nombre)
         else:
-            messagebox.showwarning("Error", "El nombre debe tener más de 2 caracteres.")
+            messagebox.showwarning("Error", "El nombre debe tener entre 3 y 20 caractéres.")
             return
     else:
         messagebox.showwarning("Error", "Debe ingresar un nombre")
@@ -176,71 +184,99 @@ def empezar_juego():
         return
 
 def mostrar_respuesta(window, op):
-    for widget in window.winfo_children():
-        widget.hide()
-    for row in range(18):
-        for column in range(4):
-            crear_celda(window, row, column, (screen_width-180)/4, "red")
+    opcion1.grid_forget()
+    opcion2.grid_forget()
+    opcion3.grid_forget()
+    opcion4.grid_forget()
 
-    respuesta_label = tk.Label(window, font=(font, 40))
-    respuesta_label.grid.grid(row=7,column=0,columnspan=4)
- 
+    respuesta_label.grid(row=6,column=1,columnspan=2, rowspan=8)
     if op == 1:
-
-        respuesta_label.config(text="Respuesta correcta!", bg="green")
-
-        # Esperar dos segundos
-        time.sleep(2)
-
-        # Ocultar el widget Label
-        respuesta_label.destroy()
+        respuesta_label.config(image=check, bg="#4a4949") 
 
     elif op == 2:
-        respuesta_label.config(text="Respuesta incorrecta!", bg="red")
-
-        # Esperar dos segundos
-        time.sleep(2)
-
-        # Ocultar el widget Label
-        respuesta_label.destroy()
+        respuesta_label.config(image=nocheck, bg="#4a4949")
     
-    for widget in window.winfo_children():
-        widget.show()
-
-    nueva_pregunta()
-
-
+    window.after(1000, lambda: [respuesta_label.grid_forget(), nueva_pregunta()])
 
 
 def fin_juego():
     global tiempo_logrado
-    bgcolor = "#4a4949"
+    bgcolor = "#3cc985"
     tiempo_logrado = time_label.cget('text')
     reiniciar_tiempo(time_label)
     eliminar_widgets(window)
+    window.config(bg=bgcolor)
     for row in range(18):
         for column in range(4):
             crear_celda(window, row, column, (screen_width-180)/4, bgcolor)
-    fin_label = tk.Label(window, text=f"Felicidades {nombre.capitalize()}! Finalizaste el juego.", font=(font,60))
+
+    fin_label = tk.Label(window, text=f"Felicidades {nombre}! Finalizaste el juego.", font=(font,60), bg="white")
     fin_label.grid(row=3,column=0,columnspan=4)
 
-    preguntasT_label = tk.Label(window, font=(font,40), text=f"Contestaste correctamente {totalAcertado} de {totalPreguntas} preguntas")
+    preguntasT_label = tk.Label(window, font=(font,40), text=f"Contestaste correctamente {totalAcertado} de {totalPreguntas} preguntas", bg="white")
     preguntasT_label.grid(row=5,column=0,columnspan=4)
 
-    punt_label = tk.Label(window, text=f"Tu puntaje fue: {puntaje}", font=(font,40))
+    punt_label = tk.Label(window, text=f"Tu puntaje fue: {puntaje}", font=(font,40), bg="white")
     punt_label.grid(row=6,column=0,columnspan=4)
 
-    tiempoT_label = tk.Label(window, text=f"Tu tiempo fue de: {tiempo_logrado}", font=(font,40))
+    tiempoT_label = tk.Label(window, text=f"Tu tiempo fue de: {tiempo_logrado}", font=(font,40), bg="white")
     tiempoT_label.grid(row=7,column=0,columnspan=4)
 
-    regresar_button = tk.Button(window, text="Regresar", cursor="hand2", bg="green", font=(font,20), relief="flat", command=lambda:[main()])
-    regresar_button.grid(row=10,column=0,columnspan=4, ipadx=10, ipady=10)
+    regresar_button = tk.Button(window, text="REGRESAR", cursor="hand2", bg="#eb6781", font=(font,20), relief="flat", command=lambda:[main()])
+    regresar_button.grid(row=12,column=0,columnspan=4, ipadx=10, ipady=10)
 
     guardar_jugador()
 
+def ver_datos():
+    data_window = tk.Toplevel(window, bg="#536363")
+    data_window.geometry("1200x600")
+    data_window.resizable(0,0)
+    user_tree = ttk.Treeview(data_window, columns=("Nombre", "Tiempo", "Puntaje", "Telefono", "Instagram"), style="Custom.Treeview")
+    user_tree.grid(row=0, column=0, padx=100)
+    data_window.columnconfigure(0, weight=1)  # Expande la columna 0
+    data_window.rowconfigure(0, weight=1)  # Expande la fila 0
+    data_window.rowconfigure(1, weight=1)  # Expande la fila 1
+
+
+    user_tree.column("#0", width=0, stretch=tk.NO)
+    user_tree.heading("#1", text="Nombre")
+    user_tree.heading("#2", text="Tiempo")
+    user_tree.heading("#3", text="Puntaje")
+    user_tree.heading("#4", text="Telefono")
+    user_tree.heading("#5", text="Instagram")
+
+    user_tree.column("#1", anchor="center")
+    user_tree.column("#2", anchor="center")
+    user_tree.column("#3", anchor="center")
+    user_tree.column("#4", anchor="center")
+    user_tree.column("#5", anchor="center")
+
+    user_tree.delete(*user_tree.get_children())  # Borrar datos existentes en el Treeview
+    
+    cursor = conexion.cursor()
+    cursor.execute("SELECT NOMBRE, TIEMPO, PUNTAJE, TELEFONO, INSTAGRAM FROM JUGADOR")
+    datos = cursor.fetchall()
+    jugadores = []
+    for jugador in datos:
+        jugadores.append(list(jugador))
+
+    jugadores.sort(key=lambda jugador: (-jugador[2], jugador[1])) #Ordena los jugadores primero por puntaje poniendo el mas alto primero, luego por tiempo poniendo el mas bajo primero
+
+    for i in range(len(jugadores)):
+        jugadores[i][1] = sec_to_min(jugadores[i][1])
+    for row in jugadores:
+        user_tree.insert("", "end", values=row)
+    cursor.close()
+
+    user_tree.bind("<Button-1>", lambda event: user_tree.selection_remove(user_tree.selection()) if user_tree.selection() else None)
+
+    regresar_button = tk.Button(data_window, width=8, text="SALIR", cursor="hand2", bg="#eb6781", font=(font,20), relief="flat", command=lambda:[data_window.destroy()])
+    regresar_button.grid(row=1,column=0) 
+
+
 
 def create_window():
-    global font, time_label, preguntaLabel, opcion1, opcion2, opcion3, opcion4, user_label, puntaje_label
+    global font, time_label, preguntaLabel, opcion1, opcion2, opcion3, opcion4, user_label, puntaje_label, respuesta_label
 
     bgcolor = "#4a4949"
 
@@ -257,7 +293,7 @@ def create_window():
     user_frame.rowconfigure(0, weight=1)  # Expande la fila 0
     user_frame.rowconfigure(1, weight=1)  # Expande la fila 1
 
-    user_label = tk.Label(user_frame, font=(font, 20), text=f"Jugador: {nombre}", bg="orange")
+    user_label = tk.Label(user_frame, font=(font, 20), text=f"Jugador: {insertar_salto_de_linea(nombre,13)}", bg="orange")
     user_label.grid(row=0, column=0, sticky="w", padx=(10,0))
 
     puntaje_label = tk.Label(user_frame, font=(font, 20), bg="orange")
@@ -284,7 +320,9 @@ def create_window():
     opcion2 = tk.Button(window, width=20, bg="lightgray", cursor="hand2", relief="flat", font=(font, 20), command=lambda:[mostrar_respuesta(window,2)])
     opcion3 = tk.Button(window, width=20, bg="lightgray", cursor="hand2", relief="flat", font=(font, 20), command=lambda:[ mostrar_respuesta(window,2)])
     opcion4= tk.Button(window, width=20, bg="lightgray", cursor="hand2", relief="flat", font=(font, 20), command=lambda:[ mostrar_respuesta(window,2)])
-        
+    
+    respuesta_label = tk.Label(window, font=(font, 80))  
+
     exitP_button = tk.Button(window, width=20, text="SALIR",bg="#eb6781",cursor="hand2",font=(font, 16), relief="flat", command=lambda:[reiniciar_tiempo(time_label), main()])
     exitP_button.grid(row=15,column=0, rowspan=2)
 
@@ -292,7 +330,7 @@ def create_window():
 
 
 def main():
-    global window, listaPreguntas, totalPreguntas, screen_width, font, totalAcertado, puntaje, tiempo_transcurrido, name_entry, ig_entry, tel_entry
+    global window, listaPreguntas, totalPreguntas, screen_width, font, totalAcertado, puntaje, tiempo_transcurrido, name_entry, ig_entry, tel_entry, directorio_actual, check, nocheck
 
     eliminar_widgets(window)
     screen_width = window.winfo_screenwidth()
@@ -333,13 +371,24 @@ def main():
     directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
     # Combina el directorio actual con el nombre de la imagen
-    ruta_imagen = os.path.join(directorio_actual, "logo-isaui.jpg")
+    ruta_logo = os.path.join(directorio_actual, "logo-isaui.jpg")
+
+    ruta_check = os.path.join(directorio_actual, "check.jpg")
+
+    ruta_nocheck = os.path.join(directorio_actual, "nocheck.jpg")
 
     # Abre una imagen
-    image = Image.open(ruta_imagen)
+    icono = Image.open(ruta_logo)
 
     # Convierte la imagen a un formato compatible con tkinter
-    icon = ImageTk.PhotoImage(image)
+    icon = ImageTk.PhotoImage(icono)
+
+    check = Image.open(ruta_check)
+    check = ImageTk.PhotoImage(check)
+
+    nocheck = Image.open(ruta_nocheck)
+    nocheck = ImageTk.PhotoImage(nocheck)
+
 
     logo = tk.Label(window, image=icon, background=bgcolor)
     logo.grid(row=0,column=0,sticky="w", rowspan=2, pady=(10,0), padx=(10,0))
@@ -380,13 +429,13 @@ def main():
     punt_label = ttk.Label(window, text="PUNTAJES", background=bgcolor)
     punt_label.grid(row=1, column=2, columnspan=2, rowspan=2)
 
-    data_button = tk.Button(window, width=10, text="DATOS", bg="#be77ed",cursor="hand2",font=(font, 16), relief="flat")
+    data_button = tk.Button(window, width=10, text="DATOS", bg="#c389f5",cursor="hand2",font=(font, 16), relief="flat", command=lambda:ver_datos())
     data_button.grid(row=9,column=2, columnspan=2, rowspan=2)
 
     tree_style = ttk.Style()
 
-    tree_style.configure("Custom.Treeview.Heading", font=(font, 16), background="orange", margin=(5, 5))  # Cambia la fuente de los headings
-    tree_style.configure("Custom.Treeview", font=(font, 16), background="", fieldbackground="#dbe096", rowheight=30, foreground="black")  # Cambia la fuente de los datos de la grilla
+    tree_style.configure("Custom.Treeview.Heading", font=(font, 16), background="#fcb34c", margin=(5, 5))  # Cambia la fuente de los headings
+    tree_style.configure("Custom.Treeview", font=(font, 16), background="", fieldbackground="#e8eb91", rowheight=30, foreground="black")  # Cambia la fuente de los datos de la grilla
     tree_style.map("Custom.Treeview", background=[("selected", "brown")])
 
     punt_tree = ttk.Treeview(window, columns=("Nombre", "Tiempo", "Puntaje"), style="Custom.Treeview")
