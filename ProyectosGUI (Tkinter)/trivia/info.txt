@@ -1,0 +1,7 @@
+Para una mejor legibilidad, instale la fuente proporcionada. El archivo se llama Gill Sans MT.ttf.
+
+Se requieren todas las imágenes para que el programa funcione.
+
+En el archivo de funciones, concretamente la función conectar(), utilice los datos de su base de datos.
+
+El archivo trivia.sql contiene todas las consultas para crear la base de datos que utiliza el programa.

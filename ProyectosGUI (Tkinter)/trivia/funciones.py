@@ -9,22 +9,46 @@ from PIL import Image, ImageTk
 import random
 from main import run
 
+def conectar():
+    global conexion
+    conexion = mysql.connector.connect(host="localhost", user="root", password="", database="trivia")
+    
+
 def crear_celda(ventana, row, column, width, color ,height=30):
     celda = tk.Frame(ventana, width=width,height=height, bg=color)#,borderwidth=1, relief='solid'
     celda.grid(row=row, column=column, pady=(0,30), padx=20)
     return celda
 
+tarea_programada_reloj = None
+
 def actualizar_reloj(ventana, label):
     current_time = time.strftime("%H:%M")  # Obtiene la hora actual en formato HH:MM:SS
-    label.config(text=current_time)      # Actualiza el texto del label
-    ventana.after(1000, lambda: actualizar_reloj(ventana, label)) # Programa la actualización cada segundo (1000 ms)
+    label.config(text=current_time)
+    # Programa la siguiente llamada y guarda el identificador
+    global tarea_programada_reloj
+    tarea_programada_reloj = ventana.after(1000, lambda: actualizar_reloj(ventana, label))
+
+# Función para detener el reloj
+def detener_reloj(ventana):
+    global tarea_programada_reloj
+    if tarea_programada_reloj:
+        ventana.after_cancel(tarea_programada_reloj)
+        tarea_programada_reloj = None# Programa la actualización cada segundo (1000 ms)
 
 def actualizar_cronometro(ventana, label):
     global tiempo_transcurrido
     tiempo_actual = time.strftime("%M:%S", time.gmtime(tiempo_transcurrido))
     label.config(text=tiempo_actual)
     tiempo_transcurrido += 1
-    ventana.after(1000, lambda: actualizar_cronometro(ventana,label))  # Actualiza cada segundo (1000 ms)
+    global tarea_programada_cronometro
+    tarea_programada_cronometro = ventana.after(1000, lambda: actualizar_cronometro(ventana, label))
+
+# Función para detener el cronómetro
+def detener_cronometro(ventana):
+    global tarea_programada_cronometro
+    if tarea_programada_cronometro:
+        ventana.after_cancel(tarea_programada_cronometro)
+        tarea_programada_cronometro = None
 
 def cargar_imagen(name_imagen):
     directorio_actual = os.path.dirname(os.path.abspath(__file__))
@@ -172,6 +196,8 @@ def eliminar_widgets(ventana):
 
 def empezar_juego(window,name_entry, ig_entry, tel_entry):
     global nombre, telefono, instagram, tiempo_transcurrido, puntaje, totalAcertado
+    conectar()
+    detener_reloj(window)
     nombre = name_entry.get()
     nombre = nombre.title()
     instagram = ig_entry.get()
@@ -219,6 +245,7 @@ def mostrar_respuesta(window, op, totalPreguntas, listaPreguntas):
 
 def fin_juego(window, totalPreguntas):
     global tiempo_logrado
+    detener_cronometro(window)
     screen_width = window.winfo_screenwidth()
     bgcolor = "#3cc985"
     tiempo_logrado = time_label.cget('text')
@@ -250,7 +277,7 @@ def ver_datos(window):
     data_window = tk.Toplevel(window, bg="#536363")
     data_window.geometry("1200x600")
     data_window.resizable(0,0)
-    user_tree = ttk.Treeview(data_window, columns=("Nombre", "Tiempo", "Puntaje", "Telefono", "Instagram"), style="Custom.Treeview")
+    user_tree = ttk.Treeview(data_window, columns=("Nombre", "Tiempo", "Puntaje", "Teléfono", "Instagram"), style="Custom.Treeview")
     user_tree.grid(row=0, column=0, padx=100)
     data_window.columnconfigure(0, weight=1)  # Expande la columna 0
     data_window.rowconfigure(0, weight=1)  # Expande la fila 0
@@ -261,7 +288,7 @@ def ver_datos(window):
     user_tree.heading("#1", text="Nombre")
     user_tree.heading("#2", text="Tiempo")
     user_tree.heading("#3", text="Puntaje")
-    user_tree.heading("#4", text="Telefono")
+    user_tree.heading("#4", text="Teléfono")
     user_tree.heading("#5", text="Instagram")
 
     user_tree.column("#1", anchor="center")
@@ -349,9 +376,11 @@ def crear_juego(window, totalPreguntas, listaPreguntas):
     
     respuesta_label = tk.Label(window, font=(font, 80))  
 
-    exitP_button = tk.Button(window, width=20, text="SALIR",bg="#eb6781",cursor="hand2",font=(font, 16), relief="flat", command=lambda:[reiniciar_tiempo(time_label),run(window)])
+    exitP_button = tk.Button(window, width=20, text="SALIR",bg="#eb6781",cursor="hand2",font=(font, 16), relief="flat", command=lambda:[detener_cronometro(window),reiniciar_tiempo(time_label),run(window)])
     exitP_button.grid(row=15,column=0, rowspan=2)
 
     nueva_pregunta(window, totalPreguntas, listaPreguntas)
 
-conexion = mysql.connector.connect(host="localhost", user="root", password="estudiantes2020", database="trivia")
+
+
+tarea_programada_cronometro = None
