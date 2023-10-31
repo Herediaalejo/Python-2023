@@ -2,6 +2,8 @@ Para una mejor legibilidad, instale la fuente proporcionada. El archivo se llama
 
 Se requieren todas las imágenes para que el programa funcione.
 
-En el archivo de funciones, concretamente la función conectar(), utilice los datos de su base de datos.
+En el archivo de funciones, concretamente en la función conectar(), utilice los datos de su base de datos.
 
 El archivo trivia.sql contiene todas las consultas para crear la base de datos que utiliza el programa.
+
+Para instalar los módulos Pillow y mysql-connector, utilice los siguientes comandos: "pip install pillow" y "pip install mysql-connector".
