@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Pregunta (
 INSERT INTO pregunta(NOMBRE, RESPUESTA_CORRECTA, RESPUESTA_INCORRECTA1, RESPUESTA_INCORRECTA2, RESPUESTA_INCORRECTA3) VALUES 
 ("¿En qué año se fundó el instituto?", "1983", "1987", "1993", "1980"), 
 ("¿Cuál fue el nombre del establecimiento educativo cuando se fundó?", "Complejo Facultativo de Enseñanza Superior San Francisco de Asís", "Instituto Educativo Superior Cura Brochero", "Instituto Superior Arturo Umberto Illia", "Escuela Mayor Facultativa Raúl Alfonsin"), 
-("¿Cómo se llamaban los fundadores?", "Raúl", "Eduardo", "Claudio", "Graciela"), 
+("¿Cuántos fueron los fundadores?", "24", "16", "29", "12"), 
 ("¿En qué año se convierte en colegio nacional?", "1985", "1989", "1995", "2001"), 
 ("¿Cuántos directores tuvo el Instituto hasta la fecha?", "4", "7", "9", "12"), 
 ("¿Cuántas carreras se dictan actualmente en el ISAUI?", "6", "4", "9", "11"), 
@@ -36,4 +36,4 @@ INSERT INTO pregunta(NOMBRE, RESPUESTA_CORRECTA, RESPUESTA_INCORRECTA1, RESPUEST
 ("¿De dónde provenía el dinero?", "Del bono contribución de los padres", "Del bono contribución de los profesores", "Del gobierno nacional", "Del gobierno provincial"), 
 ("¿Quién fue el presidente de la cooperadora en el inicio de la institución?", "Sr. Gatica", "Sra. Graciela", "Sr. Augusto", "Carlos"), 
 ("¿Quién es la presidenta de la cooperadora actualmente?", "Daniela Maschio", "Gabriela Roldan", "Agustina Aperlo", "Elizabeth Afazani"), 
-("¿Cómo se logró la nacionalización?", "Mediante la gestión del diputado Anselmo Pelaez", "Mediante la ayuda del gobernador Schiaretti", "Mediante el acuerdo con la UEPC", "Mediante la reunión de las escuelas de Carlos Paz");
+("¿Cómo logró convertirse en instituto nacional?", "Mediante la gestión del diputado Anselmo Pelaez", "Mediante la ayuda del gobernador Schiaretti", "Mediante el acuerdo con la UEPC", "Mediante la reunión de las escuelas de Carlos Paz");
